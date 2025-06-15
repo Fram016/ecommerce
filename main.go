@@ -21,8 +21,11 @@ func main() {
 	// Crear el enrutador de Mux
 	r := mux.NewRouter()
 
- 	// Servir archivos estáticos (CSS, JS, imágenes, etc.)
-    r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("node_modules/"))))
+	// Servir archivos estáticos (CSS, JS, imágenes, etc.)
+	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("node_modules/"))))
+
+	// Servir archivos de public
+	r.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./public"))))
 
 	///////////////////////////////// Ruta de Inicio //////////////////////////////////
 	// Ruta para la página de inicio (index)
@@ -167,6 +170,19 @@ func main() {
 	// Ruta para eliminar una dirección (GET)
 	r.HandleFunc("/direccion/eliminar", func(w http.ResponseWriter, r *http.Request) {
 		controllers.EliminarDireccion(w, r, db)
+	}).Methods("POST")
+
+	///////////////////////////////// Rutas para imagenes////////////////////////////
+	// Ruta para subir una imagen (GET y POST)
+	r.HandleFunc("/upload", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodPost {
+			controllers.SubirArchivo(w, r, db)
+		}
+	})
+
+
+	r.HandleFunc("/imagen/eliminar", func(w http.ResponseWriter, r *http.Request) {
+		controllers.EliminarImagen(w, r, db)
 	}).Methods("POST")
 
 	// Servir el servidor en el puerto 8080

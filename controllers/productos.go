@@ -5,7 +5,10 @@ import (
 	"database/sql"
 	"fmt"
 	"html/template"
+	"io"
+	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -18,6 +21,16 @@ func MostrarProductos(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		// Si ocurre un error, mostramos una respuesta 500
 		http.Error(w, "Error al obtener productos", http.StatusInternalServerError)
 		return
+	}
+	// Obtenemos la imagen principal para cada producto
+	for i, p := range productos {
+		imagen, err := models.ImagenPrincipal(db, p.ID)
+		if err != nil {
+			http.Error(w, "Error al obtener imagen principal de productos", http.StatusInternalServerError)
+			return
+		}
+
+		productos[i].ImagenPrincipal = imagen.RutaImagen // Asignamos la imagen al producto
 	}
 
 	// Obtener la sesión del usuario
@@ -168,7 +181,22 @@ func ObtenerProducto(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		http.Error(w, "Producto no encontrado", http.StatusNotFound)
 		return
 	}
+	// Obtener las imágenes del producto
+	imagenes, err := models.ListarImagenes(db, id)
+	if err != nil {
+		http.Error(w, "Error al obtener imágenes", http.StatusInternalServerError)
+		return
+	}
 
+	//obtener la imagen principal del producto
+	imagenPrincipal, err := models.ImagenPrincipal(db, id)
+	if err != nil {
+		http.Error(w, "Error al obtener la imagen principal", http.StatusInternalServerError)
+		return
+	}
+
+	producto.Imagenes = imagenes
+	producto.ImagenPrincipal = imagenPrincipal.RutaImagen
 	// Determinamos cuál plantilla renderizar dependiendo del rol
 	var tmpl *template.Template
 
@@ -228,6 +256,14 @@ func ModificarProducto(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 			http.Error(w, "Producto no encontrado", http.StatusNotFound)
 			return
 		}
+		// Obtener las imágenes del producto
+		imagenes, err := models.ListarImagenes(db, id)
+		if err != nil {
+			http.Error(w, "Error al obtener imágenes", http.StatusInternalServerError)
+			return
+		}
+
+		producto.Imagenes = imagenes
 
 		tmpl := template.Must(template.ParseFiles(
 			"views/partials/header_admin.html", // Encabezado para admin
@@ -318,4 +354,92 @@ func EliminarProducto(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 	// Redirigir a la lista de productos después de eliminar uno
 	http.Redirect(w, r, "/productos", http.StatusSeeOther)
+}
+
+func SubirArchivo(w http.ResponseWriter, r *http.Request, db *sql.DB) {
+	// Verificar si la solicitud es POST
+	if r.Method != http.MethodPost {
+		http.Error(w, "Método no permitido", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// Parsear el formulario para obtener el archivo
+	err := r.ParseMultipartForm(10 << 20) // Limitar el tamaño del archivo a 10 MB
+	if err != nil {
+		http.Error(w, "Error al parsear el formulario", http.StatusBadRequest)
+		return
+	}
+
+	// Obtener el archivo del formulario
+	file, handle, err := r.FormFile("imagen")
+	if err != nil {
+		http.Error(w, "Error al obtener el archivo", http.StatusBadRequest)
+		return
+	}
+	// obtenemos y transformamos el ID del producto
+	idStr := r.URL.Query().Get("id")
+	if idStr == "" {
+		http.Error(w, "ID de producto no proporcionado", http.StatusBadRequest)
+		return
+	}
+	// Convertir el ID de string a int
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, "ID de producto inválido", http.StatusBadRequest)
+		return
+	}
+
+	defer file.Close()
+	data, err := io.ReadAll(file)
+	if err != nil {
+		http.Error(w, "Error al leer el archivo", http.StatusInternalServerError)
+		return
+	}
+	ruta := "public/img/products/" + "product-" + strconv.Itoa(id) + "-" + handle.Filename
+	err = os.WriteFile(ruta, data, 0666)
+	if err != nil {
+		http.Error(w, "Error al guardar el archivo", http.StatusInternalServerError)
+		return
+	}
+
+	// Actualizar la ruta de la imagen en la base de datos
+	err = models.CrearImagen(db, models.ProductoImagen{
+		ProductoID: id,
+		RutaImagen: ruta,
+		TipoImagen: "principal",
+	})
+
+	if err != nil {
+		// Verificamos si hubo un error al crear la imagen del producto
+		http.Error(w, "Error al crear la imagen del producto", http.StatusInternalServerError)
+		return
+	}
+	returnedURL := fmt.Sprintf("/admin/producto/editar?id=%d", id)
+	http.Redirect(w, r, returnedURL, http.StatusSeeOther)
+}
+
+func EliminarImagen(w http.ResponseWriter, r *http.Request, db *sql.DB) {
+	// Obtener la ruta de la imagen desde la URL
+	ruta := r.URL.Query().Get("ruta")
+	if ruta == "" {
+		http.Error(w, "Ruta de imagen no proporcionada", http.StatusBadRequest)
+		return
+	}
+
+	// Eliminar el archivo físicamente
+	err := os.Remove(ruta)
+	if err != nil {
+		log.Println("Error al eliminar el archivo de la imagen:", err)
+		// No hacemos return aquí porque igual intentamos eliminar de BD
+	}
+
+	// Eliminar de la base de datos
+	err = models.EliminarImagen(db, ruta)
+	if err != nil {
+		http.Error(w, "Error al eliminar la imagen de la base de datos", http.StatusInternalServerError)
+		return
+	}
+
+	// Redirigir al origen
+	http.Redirect(w, r, r.Referer(), http.StatusSeeOther)
 }

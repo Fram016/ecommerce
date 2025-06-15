@@ -12,7 +12,7 @@ Thumbs.db
 # Directorios de compilación
 dist/
 build/
-
+public/
 # Otros archivos generados
 *.log
 *.tgz

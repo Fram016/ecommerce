@@ -15,6 +15,8 @@ type Producto struct {
 	Stock         int     `json:"stock"`
 	CategoriaID   int     `json:"categoria_id"`
 	FechaAgregado string  `json:"fecha_agregado"`
+	ImagenPrincipal string `json:"imagen_principal"`
+	Imagenes    []ProductoImagen `json:"imagenes"`
 }
 
 // ListarProductos devuelve todos los productos en la base de datos

@@ -129,6 +129,14 @@ func MostrarIndex(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		http.Error(w, "Error al obtener productos", http.StatusInternalServerError)
 		return
 	}
+	for i, p := range productos {
+		imagen, err := models.ImagenPrincipal(db, p.ID)
+		if err != nil {
+			http.Error(w, "Error al obtener imagen principal del producto", http.StatusInternalServerError)
+			return
+		}
+		productos[i].ImagenPrincipal = imagen.RutaImagen
+	}
 
 	// Cargar la plantilla de la página de inicio
 	tmpl, err := template.ParseFiles("views/index.html")

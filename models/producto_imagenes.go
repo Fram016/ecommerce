@@ -12,7 +12,6 @@ type ProductoImagen struct {
 	RutaImagen string `json:"ruta_imagen"`
 	TipoImagen string `json:"tipo_imagen"` // 'principal' o 'galeria'
 }
-
 // ListarImagenes devuelve todas las imágenes de un producto
 func ListarImagenes(db *sql.DB, productoID int) ([]ProductoImagen, error) {
 	rows, err := db.Query(`SELECT id, producto_id, ruta_imagen, tipo_imagen FROM producto_imagenes WHERE producto_id = ?`, productoID)
@@ -38,6 +37,36 @@ func ListarImagenes(db *sql.DB, productoID int) ([]ProductoImagen, error) {
 	return imagenes, nil
 }
 
+// ImagenPrincipal devuelve la imagen principal de un producto
+func ImagenPrincipal(db *sql.DB, productoID int) (ProductoImagen, error) {
+    row := db.QueryRow(`SELECT id, producto_id, ruta_imagen, tipo_imagen FROM producto_imagenes WHERE producto_id = ? AND tipo_imagen = "principal" LIMIT 1`, productoID)
+
+    imagen := ProductoImagen{}
+    if err := row.Scan(&imagen.ID, &imagen.ProductoID, &imagen.RutaImagen, &imagen.TipoImagen); err != nil {
+        if err == sql.ErrNoRows {
+            return ProductoImagen{}, nil // No se encuentra la imagen, devuelve un objeto vacío
+        }
+        log.Println("Error al escanear imagen:", err)
+        return ProductoImagen{}, err // Retorna un error si falla la consulta
+    }
+    return imagen, nil // Devuelve la imagen completa si no hay error
+}
+
+//buscar imagen por id
+func ObtenerImagen(db *sql.DB, id int) (ProductoImagen, error) {
+	query := `SELECT id, producto_id, ruta_imagen, tipo_imagen FROM producto_imagenes WHERE id = ?`
+	var imagen ProductoImagen
+	err := db.QueryRow(query, id).Scan(&imagen.ID, &imagen.ProductoID, &imagen.RutaImagen, &imagen.TipoImagen)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return imagen, nil // No se encuentra la imagen, devuelve un objeto vacío
+		}
+		log.Println("Error al obtener imagen:", err)
+		return imagen, err // Retorna un error si falla la consulta
+	}
+	return imagen, nil // Devuelve la imagen completa si no hay error
+}
+
 // CrearImagen inserta una nueva imagen para un producto
 func CrearImagen(db *sql.DB, imagen ProductoImagen) error {
 	query := `INSERT INTO producto_imagenes (producto_id, ruta_imagen, tipo_imagen) VALUES (?, ?, ?)`
@@ -50,9 +79,9 @@ func CrearImagen(db *sql.DB, imagen ProductoImagen) error {
 }
 
 // EliminarImagen elimina una imagen de la base de datos
-func EliminarImagen(db *sql.DB, id int) error {
-	query := `DELETE FROM producto_imagenes WHERE id = ?`
-	_, err := db.Exec(query, id)
+func EliminarImagen(db *sql.DB, ruta string) error {
+	query := `DELETE FROM producto_imagenes WHERE ruta_imagen = ?`
+	_, err := db.Exec(query, ruta)
 	if err != nil {
 		log.Println("Error al eliminar imagen:", err)
 		return err
