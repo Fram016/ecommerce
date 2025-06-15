@@ -75,6 +75,11 @@ func main() {
 		controllers.ObtenerProducto(w, r, db)
 	}).Methods("GET")
 
+	// Ruta para ver un producto (GET por ID)
+	r.HandleFunc("/producto", func(w http.ResponseWriter, r *http.Request) {
+		controllers.ObtenerProducto(w, r, db)
+	}).Methods("GET")
+
 	// Ruta para editar un producto (GET y POST)
 	adminRouter.HandleFunc("/producto/editar", func(w http.ResponseWriter, r *http.Request) {
 		controllers.ModificarProducto(w, r, db)

@@ -149,6 +149,18 @@ func ObtenerProducto(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		http.Error(w, "ID de producto inválido", http.StatusBadRequest)
 		return
 	}
+	// Obtener la sesión del usuario
+	session, _ := store.Get(r, "session")
+	rol, ok := session.Values["rol"].(string)
+	if !ok {
+		rol = ""
+	}
+	// Si el usuario es admin, redirigimos a la página de administración
+	if rol == "admin" && !strings.HasPrefix(r.URL.Path, "/admin") {
+		// Redirigimos solo si el usuario está intentando acceder a la ruta /productos o cualquier otra que no sea /admin
+		http.Redirect(w, r, "/admin/productos", http.StatusSeeOther)
+		return
+	}
 
 	// Obtener el producto desde la base de datos utilizando el ID
 	producto, err := models.ObtenerProducto(db, id)
@@ -157,18 +169,38 @@ func ObtenerProducto(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	// Renderizamos la vista del producto
-	tmpl := template.Must(template.ParseFiles(
-		"views/partials/header_admin.html",        // Encabezado para admin
-		"views/admin/detalle_producto_admin.html", // Cuerpo con los productos para admin
-		"views/partials/footer.html",              // Pie de página común
-	))
-	// Pasamos los productos a la vista y renderizamos todas las plantillas (header, cuerpo, footer)
-	err = tmpl.ExecuteTemplate(w, "detalle_producto_admin", producto)
-	if err != nil {
-		// Si ocurre un error al renderizar la plantilla, mostramos una respuesta 500
-		http.Error(w, "Error al renderizar la vista de productos", http.StatusInternalServerError)
-		return
+	// Determinamos cuál plantilla renderizar dependiendo del rol
+	var tmpl *template.Template
+
+	// Si el rol es admin, mostramos la vista para administradores
+	if rol == "admin" {
+		tmpl = template.Must(template.ParseFiles(
+			"views/partials/header_admin.html",
+			"views/admin/detalle_producto_admin.html",
+			"views/partials/footer.html",
+		))
+		// Pasamos los productos a la vista y renderizamos todas las plantillas (header, cuerpo, footer)
+		err = tmpl.ExecuteTemplate(w, "detalle_producto_admin", producto)
+		if err != nil {
+			// Si ocurre un error al renderizar la plantilla, mostramos una respuesta 500
+			http.Error(w, "Error al renderizar la vista de productos", http.StatusInternalServerError)
+			return
+		}
+
+	} else {
+		// Si el rol es cliente o cualquier otro, mostramos la vista para clientes
+		tmpl = template.Must(template.ParseFiles(
+			"views/partials/header_cliente.html",          // Encabezado para cliente
+			"views/cliente/detalle_producto_cliente.html", // Cuerpo con los productos para clientes
+			"views/partials/footer.html",                  // Pie de página común
+		))
+		// Pasamos los productos a la vista y renderizamos todas las plantillas (header, cuerpo, footer)
+		err = tmpl.ExecuteTemplate(w, "detalle_producto_cliente", producto)
+		if err != nil {
+			// Si ocurre un error al renderizar la plantilla, mostramos una respuesta 500
+			http.Error(w, "Error al renderizar la vista de productos", http.StatusInternalServerError)
+			return
+		}
 	}
 }
 
