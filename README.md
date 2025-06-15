@@ -1,7 +1,9 @@
-"Requisitos"
-Ejecutar en la computadora
+Requisitos:
 
-npm install
+Tener npm instalado
+
+Ejecutar en la computadora, npm install
 
 Recursos usados:
+
 Bootstrap para estilos de CSS
