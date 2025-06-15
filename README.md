@@ -1,5 +1,6 @@
 "Requisitos"
 Ejecutar en la computadora
+
 npm install
 
 Recursos usados:
