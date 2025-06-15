@@ -115,7 +115,7 @@ func RegistrarUsuario(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	}
 
 	// Si es GET, mostramos el formulario para crear un nuevo usuario cliente
-	tmpl, err := template.ParseFiles("views/registrarse.html")
+	tmpl, err := template.ParseFiles("views/auth/registrarse.html")
 	if err != nil {
 		http.Error(w, "Error al cargar el formulario de creación", http.StatusInternalServerError)
 		return

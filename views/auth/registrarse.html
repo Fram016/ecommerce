@@ -1,28 +1,58 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro</title>
+    <title>Iniciar sesión - Ecommerce</title>
+    <link rel="stylesheet" href="/static/bootstrap/dist/css/bootstrap.min.css">
 </head>
-<body>
-    <h1>Crear una nueva cuenta</h1>
 
-    <form action="/registrarse" method="POST">
-        <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" name="nombre" required><br><br>
+<body class="d-flex justify-content-center align-items-center vh-100">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="card">
+                    <div class="card-body">
 
-        <label for="correo">Correo:</label>
-        <input type="email" id="correo" name="correo" required><br><br>
+                        <h5 class="card-title text-center mb-4">Registrarse</h5>
+                        <form action="/registrarse" method="POST">
+                            <!-- Campo para el nombre -->
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre" required>
+                            </div>
 
-        <label for="clave_segura">Contraseña:</label>
-        <input type="password" id="clave_segura" name="clave_segura" required><br><br>
+                            <!-- Campo para el correo -->
+                            <div class="mb-3">
+                                <label for="correo" class="form-label">Correo electrónico</label>
+                                <input type="email" class="form-control" id="correo" name="correo" required>
+                            </div>
 
+                            <!-- Campo para la contraseña -->
+                            <div class="mb-3">
+                                <label for="clave_segura">Contraseña:</label>
+                                <input type="password" class="form-control" id="clave_segura" name="clave_segura" required>
+                            </div>
+                            <!-- Botón de submit -->
+                            <button type="submit" class="btn btn-primary w-100">Registrar</button>
+                        </form>
+                        <div class="card-body text-center">
+                            <!-- Botón de regreso -->
+                            <a href="/" class="btn btn-outline-primary w-100">
+                                ← Volver al Ecommerce
+                            </a>
+                        </div>
+                        <div class="text-center">
+                            ¿Ya tienes cuenta? <a href="/login">Inicia sesión aquí
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <button type="submit">Registrar</button>
-    </form>
-
-    <br>
-    <p>¿Ya tienes cuenta? <a href="/login">Inicia sesión aquí</a></p>
+    <script src="/static/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
