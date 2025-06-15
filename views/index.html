@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido al Ecommerce</title>
+</head>
+<body>
+    <header>
+        <h1>Bienvenido a nuestro Ecommerce</h1>
+        <nav>
+            <a href="/productos">Ver Productos</a> | 
+            <a href="/categorias">Ver Categorías</a> | 
+            <a href="/login">Iniciar sesión</a> | 
+            <a href="/registrarse">Registrarse</a> | 
+            <!-- Enlace para cerrar sesión -->
+            <a href="/cerrar-sesion">Cerrar sesión</a>
+        </nav>
+    </header>
+
+    <section>
+        <h2>Lo más reciente</h2>
+        <p>Aquí podrías mostrar algunos productos destacados o recomendaciones de productos para tus usuarios.</p>
+        
+        <ul>
+            <!-- Iteramos sobre los productos y los mostramos -->
+            {{range .}}
+                <li>
+                    <strong>{{.Nombre}}</strong><br>
+                    Precio: {{.Precio}} USD<br>
+                    Descripción: {{.Descripcion}}<br>
+                    <!-- Puedes agregar más detalles o enlaces a cada producto -->
+                </li>
+            {{else}}
+                <li>No hay productos disponibles.</li>
+            {{end}}
+        </ul>
+    </section>
+
+    <footer>
+        <p>© 2025 Ecommerce. Todos los derechos reservados.</p>
+    </footer>
+</body>
+</html>

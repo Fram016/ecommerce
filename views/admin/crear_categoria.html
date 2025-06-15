@@ -1,0 +1,18 @@
+<!-- crear_categoria.html -->
+{{template "header_admin.html" .}}
+
+<h1>Crear Nueva Categoría</h1>
+<form action="/admin/categoria/crear" method="POST">
+    <label for="nombre">Nombre:</label>
+    <input type="text" name="nombre" id="nombre" required><br>
+
+    <label for="descripcion">Descripción:</label>
+    <textarea name="descripcion" id="descripcion" required></textarea><br>
+
+    <button type="submit">Crear Categoría</button>
+</form>
+
+<br>
+<a href="/admin/categorias">Volver a la lista de categorías</a>
+
+{{template "footer.html" .}}

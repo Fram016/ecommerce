@@ -8,13 +8,13 @@ import (
 
 // Producto representa la estructura de la tabla 'productos'
 type Producto struct {
-	ID          int     `json:"id"`
-	Nombre      string  `json:"nombre"`
-	Descripcion string  `json:"descripcion"`
-	Precio      float64 `json:"precio"`
-	Stock       int     `json:"stock"`
-	CategoriaID int     `json:"categoria_id"`
-	FechaAgregado string `json:"fecha_agregado"`
+	ID            int     `json:"id"`
+	Nombre        string  `json:"nombre"`
+	Descripcion   string  `json:"descripcion"`
+	Precio        float64 `json:"precio"`
+	Stock         int     `json:"stock"`
+	CategoriaID   int     `json:"categoria_id"`
+	FechaAgregado string  `json:"fecha_agregado"`
 }
 
 // ListarProductos devuelve todos los productos en la base de datos

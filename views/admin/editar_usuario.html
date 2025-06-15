@@ -1,0 +1,25 @@
+{{template "header_admin.html" .}}
+    <h1>Editar Usuario</h1>
+    <form action="/usuario/editar?id={{.ID}}" method="POST">
+        <label for="correo">Correo:</label>
+        <input type="email" name="correo" id="correo" value="{{.Correo}}" required><br>
+
+        <label for="nombre">Nombre:</label>
+        <input type="text" name="nombre" id="nombre" value="{{.Nombre}}" required><br>
+
+        <label for="clave_segura">Contraseña:</label>
+        <input type="password" name="clave_segura" id="clave_segura" required><br>
+
+        <label for="rol">Rol:</label>
+        <select name="rol" id="rol" required>
+            <option value="admin" {{if eq .Rol "admin"}}selected{{end}}>admin</option>
+            <option value="cliente" {{if eq .Rol "usuario"}}selected{{end}}>cliente</option>
+        </select><br>
+
+        <button type="submit">Actualizar Usuario</button>
+    </form>
+
+    <br>
+    <a href="/usuarios">Volver a la lista de usuarios</a>
+
+{{template "footer.html" .}}

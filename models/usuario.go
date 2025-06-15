@@ -8,11 +8,11 @@ import (
 
 // Usuario representa la estructura de la tabla 'usuarios'
 type Usuario struct {
-	ID           int    `json:"id"`
-	Correo       string `json:"correo"`
-	Nombre       string `json:"nombre"`
-	ClaveSegura  string `json:"clave_segura"`
-	Rol          string `json:"rol"`
+	ID            int    `json:"id"`
+	Correo        string `json:"correo"`
+	Nombre        string `json:"nombre"`
+	ClaveSegura   string `json:"clave_segura"`
+	Rol           string `json:"rol"`
 	FechaRegistro string `json:"fecha_registro"`
 }
 
@@ -41,7 +41,18 @@ func ListarUsuarios(db *sql.DB) ([]Usuario, error) {
 	return usuarios, nil
 }
 
-// ObtenerUsuarioPorCorreo devuelve un usuario por correo
+// CrearUsuario inserta un nuevo usuario en la base de datos
+func CrearUsuario(db *sql.DB, usuario Usuario) error {
+	query := `INSERT INTO usuarios (correo, nombres, clave_segura, rol, fecha_registro) VALUES (?, ?, ?, ?, NOW())`
+	_, err := db.Exec(query, usuario.Correo, usuario.Nombre, usuario.ClaveSegura, usuario.Rol)
+	if err != nil {
+		log.Println("Error al crear usuario:", err)
+		return err
+	}
+	return nil
+}
+
+// ObtenerUsuarioPorCorreo devuelve un usuario basado en su correo
 func ObtenerUsuarioPorCorreo(db *sql.DB, correo string) (Usuario, error) {
 	var usuario Usuario
 	query := `SELECT id, correo, nombres, clave_segura, rol, fecha_registro FROM usuarios WHERE correo = ?`
@@ -55,15 +66,17 @@ func ObtenerUsuarioPorCorreo(db *sql.DB, correo string) (Usuario, error) {
 	return usuario, nil
 }
 
-// CrearUsuario inserta un nuevo usuario en la base de datos
-func CrearUsuario(db *sql.DB, usuario Usuario) error {
-	query := `INSERT INTO usuarios (correo, nombres, clave_segura, rol) VALUES (?, ?, ?, ?)`
-	_, err := db.Exec(query, usuario.Correo, usuario.Nombre, usuario.ClaveSegura, usuario.Rol)
+func ObtenerUsuario(db *sql.DB, id int) (Usuario, error) {
+	var usuario Usuario
+	query := `SELECT id, correo, nombres, clave_segura, rol, fecha_registro FROM usuarios WHERE id = ?`
+	err := db.QueryRow(query, id).Scan(&usuario.ID, &usuario.Correo, &usuario.Nombre, &usuario.ClaveSegura, &usuario.Rol, &usuario.FechaRegistro)
 	if err != nil {
-		log.Println("Error al crear usuario:", err)
-		return err
+		if err == sql.ErrNoRows {
+			return usuario, fmt.Errorf("usuario no encontrado")
+		}
+		return usuario, err
 	}
-	return nil
+	return usuario, nil
 }
 
 // ModificarUsuario actualiza la información de un usuario en la base de datos

@@ -1,0 +1,19 @@
+{{define "detalle_producto_admin"}}
+{{template "header_admin"}}
+    <h1>Detalles del Producto</h1>
+
+    <p><strong>Nombre:</strong> {{.Nombre}}</p>
+    <p><strong>Descripción:</strong> {{.Descripcion}}</p>
+    <p><strong>Precio:</strong> ${{.Precio}}</p>
+    <p><strong>Stock:</strong> {{.Stock}}</p>
+    <p><strong>Categoría ID:</strong> {{.CategoriaID}}</p>
+
+    <br>
+    <a href="/admin/productos">Volver a la lista de productos</a>
+    <br>
+    <a href="/admin/producto/editar?id={{.ID}}">Editar Producto</a>
+    <br>
+    <a href="/admin/producto/eliminar?id={{.ID}}" onclick="return confirm('¿Estás seguro de que deseas eliminar este producto?')">Eliminar Producto</a>
+
+{{template "footer"}}
+{{end}}

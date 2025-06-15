@@ -8,17 +8,18 @@ import (
 
 // Pedido representa la estructura de la tabla 'pedidos'
 type Pedido struct {
-	ID            int     `json:"id"`
-	UsuarioID     int     `json:"usuario_id"`
-	FechaPedido   string  `json:"fecha_pedido"`
-	Estado        string  `json:"estado"`
-	Total         float64 `json:"total"`
-	DireccionEnvio string `json:"direccion_envio"`
+	ID             int     `json:"id"`
+	UsuarioID      int     `json:"usuario_id"`
+	FechaPedido    string  `json:"fecha_pedido"`
+	Estado         string  `json:"estado"`
+	Total          float64 `json:"total"`
+	DireccionEnvio int     `json:"direccion_envio"`
+	Observaciones  string  `json:"observacion,omitempty"`
 }
 
 // ListarPedidos devuelve todos los pedidos en la base de datos
 func ListarPedidos(db *sql.DB) ([]Pedido, error) {
-	rows, err := db.Query(`SELECT id, usuario_id, fecha_pedido, estado, total, direccion_envio FROM pedidos`)
+	rows, err := db.Query(`SELECT id, usuario_id, fecha_pedido, estado, total, direccion_envio, observacion FROM pedidos`)
 	if err != nil {
 		log.Println("Error al obtener pedidos:", err)
 		return nil, err
@@ -28,7 +29,7 @@ func ListarPedidos(db *sql.DB) ([]Pedido, error) {
 	var pedidos []Pedido
 	for rows.Next() {
 		var pedido Pedido
-		if err := rows.Scan(&pedido.ID, &pedido.UsuarioID, &pedido.FechaPedido, &pedido.Estado, &pedido.Total, &pedido.DireccionEnvio); err != nil {
+		if err := rows.Scan(&pedido.ID, &pedido.UsuarioID, &pedido.FechaPedido, &pedido.Estado, &pedido.Total, &pedido.DireccionEnvio, &pedido.Observaciones); err != nil {
 			log.Println("Error al escanear pedido:", err)
 			return nil, err
 		}
@@ -44,8 +45,8 @@ func ListarPedidos(db *sql.DB) ([]Pedido, error) {
 // ObtenerPedido por ID
 func ObtenerPedido(db *sql.DB, id int) (Pedido, error) {
 	var pedido Pedido
-	query := `SELECT id, usuario_id, fecha_pedido, estado, total, direccion_envio FROM pedidos WHERE id = ?`
-	err := db.QueryRow(query, id).Scan(&pedido.ID, &pedido.UsuarioID, &pedido.FechaPedido, &pedido.Estado, &pedido.Total, &pedido.DireccionEnvio)
+	query := `SELECT id, usuario_id, fecha_pedido, estado, total, direccion_envio, observacion FROM pedidos WHERE id = ?`
+	err := db.QueryRow(query, id).Scan(&pedido.ID, &pedido.UsuarioID, &pedido.FechaPedido, &pedido.Estado, &pedido.Total, &pedido.DireccionEnvio, &pedido.Observaciones)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return pedido, fmt.Errorf("pedido no encontrado")
@@ -57,8 +58,8 @@ func ObtenerPedido(db *sql.DB, id int) (Pedido, error) {
 
 // CrearPedido inserta un nuevo pedido en la base de datos
 func CrearPedido(db *sql.DB, pedido Pedido) error {
-	query := `INSERT INTO pedidos (usuario_id, fecha_pedido, estado, total, direccion_envio) VALUES (?, ?, ?, ?, ?)`
-	_, err := db.Exec(query, pedido.UsuarioID, pedido.FechaPedido, pedido.Estado, pedido.Total, pedido.DireccionEnvio)
+	query := `INSERT INTO pedidos (usuario_id, fecha_pedido, estado, total, direccion_envio, observacion) VALUES (?, ?, ?, ?, ?, ?)`
+	_, err := db.Exec(query, pedido.UsuarioID, pedido.FechaPedido, pedido.Estado, pedido.Total, pedido.DireccionEnvio, pedido.Observaciones)
 	if err != nil {
 		log.Println("Error al crear pedido:", err)
 		return err
@@ -68,8 +69,8 @@ func CrearPedido(db *sql.DB, pedido Pedido) error {
 
 // ModificarPedido actualiza la información de un pedido en la base de datos
 func ModificarPedido(db *sql.DB, pedido Pedido) error {
-	query := `UPDATE pedidos SET usuario_id = ?, fecha_pedido = ?, estado = ?, total = ?, direccion_envio = ? WHERE id = ?`
-	_, err := db.Exec(query, pedido.UsuarioID, pedido.FechaPedido, pedido.Estado, pedido.Total, pedido.DireccionEnvio, pedido.ID)
+	query := `UPDATE pedidos SET usuario_id = ?, fecha_pedido = ?, estado = ?, total = ?, direccion_envio = ?, observacion = ? WHERE id = ?`
+	_, err := db.Exec(query, pedido.UsuarioID, pedido.FechaPedido, pedido.Estado, pedido.Total, pedido.DireccionEnvio, pedido.Observaciones, pedido.ID)
 	if err != nil {
 		log.Println("Error al modificar pedido:", err)
 		return err

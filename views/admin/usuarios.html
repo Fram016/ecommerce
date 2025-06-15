@@ -1,0 +1,19 @@
+{{template "header_admin.html" .}}
+
+    <h1>Lista de Usuarios</h1>
+    <ul>
+        {{range .}}
+        <li>
+            <strong>{{.Nombre}}</strong> - {{.Correo}}<br>
+            Rol: {{.Rol}}<br>
+            <a href="/admin/usuario?id={{.ID}}">Ver Detalles</a> |
+            <a href="/admin/usuario/editar?id={{.ID}}">Editar</a> |
+            <a href="/admin/direcciones?id={{.ID}}">Ver direcciones</a> |
+            <a href="/admin/usuario/eliminar?id={{.ID}}" onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?')">Eliminar</a>
+        </li>
+        {{end}}
+    </ul>
+    <br>
+    <a href="/usuario/crear">Crear Nuevo Usuario</a>
+
+{{template "footer.html" .}}

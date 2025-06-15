@@ -1,0 +1,14 @@
+{{template "header_admin.html" .}}
+
+<h1>Detalles de la Categoría</h1>
+
+<p><strong>Nombre:</strong> {{.Nombre}}</p>
+<p><strong>Descripción:</strong> {{.Descripcion}}</p>
+
+<br>
+<a href="/admin/categorias">Volver a la lista de categorías</a>
+<br>
+<a href="/admin/categoria/editar?id={{.ID}}">Editar Categoría</a> |
+<a href="/admin/categoria/eliminar?id={{.ID}}" onclick="return confirm('¿Estás seguro de que deseas eliminar esta categoría?')">Eliminar Categoría</a>
+
+{{template "footer.html" .}}

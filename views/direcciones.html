@@ -1,0 +1,50 @@
+<!-- views/direcciones.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Direcciones del Cliente</title>
+</head>
+<body>
+    <h1>Direcciones del Cliente</h1>
+    
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Dirección</th>
+                <th>Ciudad</th>
+                <th>Provincia</th>
+                <th>Código Postal</th>
+                <th>País</th>
+                <th>Es Principal</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{range .}}
+                <tr>
+                    <td>{{.ID}}</td>
+                    <td>{{.Direccion}}</td>
+                    <td>{{.Ciudad}}</td>
+                    <td>{{.Provincia}}</td>
+                    <td>{{.CodigoPostal}}</td>
+                    <td>{{.Pais}}</td>
+                    <td>{{.EsPrincipal}}</td>
+                    <td>
+                        <a href="/direccion/editar?id={{.ID}}">Editar</a> | 
+                        <form action="/direccion/eliminar?id={{.ID}}" method="POST" style="display:inline;">
+                            <input type="hidden" name="id" value="{{.ID}}">
+                            <button type="submit">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+            {{end}}
+        </tbody>
+    </table>
+
+    <br>
+    <a href="/direccion/crear">Crear Nueva Dirección</a>
+</body>
+</html>

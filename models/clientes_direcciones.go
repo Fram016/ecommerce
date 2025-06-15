@@ -74,3 +74,18 @@ func EliminarDireccion(db *sql.DB, id int) error {
 	}
 	return nil
 }
+
+// ObtenerDireccion obtiene una dirección de cliente por ID
+func ObtenerDireccion(db *sql.DB, id int) (ClienteDireccion, error) {
+	var direccion ClienteDireccion
+	query := `SELECT id, usuario_id, direccion, ciudad, provincia, codigo_postal, pais, es_principal FROM clientes_direcciones WHERE id = ?`
+	err := db.QueryRow(query, id).Scan(&direccion.ID, &direccion.UsuarioID, &direccion.Direccion, &direccion.Ciudad, &direccion.Provincia, &direccion.CodigoPostal, &direccion.Pais, &direccion.EsPrincipal)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return direccion, nil // Si no encuentra la dirección, la devuelve vacía
+		}
+		log.Println("Error al obtener dirección:", err)
+		return direccion, err
+	}
+	return direccion, nil
+}

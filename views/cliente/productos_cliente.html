@@ -1,0 +1,18 @@
+{{define "productos_cliente"}}
+{{template "header_cliente"}}
+
+<h1>Lista de Productos</h1>
+<ul>
+    {{range .}}
+    <li>
+        <strong>{{.Nombre}}</strong> - ${{.Precio}}<br>
+        Descripción: {{.Descripcion}}<br>
+        Stock: {{.Stock}}<br>
+        <a href="/producto?id={{.ID}}">Ver Detalles</a>
+    </li>
+    {{end}}
+</ul>
+<br>
+
+{{template "footer"}}
+{{end}}
