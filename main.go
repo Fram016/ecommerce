@@ -20,6 +20,10 @@ func main() {
 
 	// Crear el enrutador de Mux
 	r := mux.NewRouter()
+
+ 	// Servir archivos estáticos (CSS, JS, imágenes, etc.)
+    r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("node_modules/"))))
+
 	///////////////////////////////// Ruta de Inicio //////////////////////////////////
 	// Ruta para la página de inicio (index)
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
