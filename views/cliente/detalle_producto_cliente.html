@@ -1,15 +1,57 @@
 {{define "detalle_producto_cliente"}}
 {{template "header_cliente"}}
-    <h1>Detalles del Producto</h1>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-4">Detalles del Producto</h3>
 
-    <p><strong>Nombre:</strong> {{.Nombre}}</p>
-    <p><strong>Descripción:</strong> {{.Descripcion}}</p>
-    <p><strong>Precio:</strong> ${{.Precio}}</p>
-    <p><strong>Stock:</strong> {{.Stock}}</p>
-    <p><strong>Categoría ID:</strong> {{.CategoriaID}}</p>
+                    <!-- Imagen del producto (si la tienes) -->
+                    <div class="text-center mb-4">
+                        <img src="{{.ImagenPrincipal}}" alt="Imagen del producto" class="img-fluid" style="max-width: 300px;">
+                    </div>
 
-    <br>
-    <a href="/productos">Volver a la lista de productos</a>
+                    <!-- Detalles del producto -->
+                    <div class="mb-3">
+                        <h5 class="mb-2"><strong>Nombre del Producto:</strong></h5>
+                        <p>{{.Nombre}}</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <h5 class="mb-2"><strong>Descripción:</strong></h5>
+                        <p>{{.Descripcion}}</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <h5 class="mb-2"><strong>Precio:</strong></h5>
+                        <p class="text-success fs-4">${{.Precio}}</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <h5 class="mb-2"><strong>Stock disponible:</strong></h5>
+                        <p>{{.Stock}} unidades</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <h5 class="mb-2"><strong>Categoría:</strong></h5>
+                        <p>{{.CategoriaID}}</p>
+                    </div>
+
+                    <!-- Botón de agregar al carrito -->
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary btn-lg" type="button">Agregar al Carrito</button>
+                    </div>
+
+                    <!-- Botón de regreso -->
+                    <div class="text-center mt-4">
+                        <a href="/productos" class="btn btn-outline-secondary">← Volver a la lista de productos</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {{template "footer"}}
 {{end}}
 

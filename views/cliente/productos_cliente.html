@@ -1,18 +1,27 @@
 {{define "productos_cliente"}}
 {{template "header_cliente"}}
 
-<h1>Lista de Productos</h1>
-<ul>
-    {{range .}}
-    <li>
-        <strong>{{.Nombre}}</strong> - ${{.Precio}}<br>
-        Descripción: {{.Descripcion}}<br>
-        Stock: {{.Stock}}<br>
-        <a href="/producto?id={{.ID}}">Ver Detalles</a>
-    </li>
-    {{end}}
-</ul>
-<br>
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Lista de Productos</h2>
+    <div class="row">
+        {{range .}}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <!-- Imagen del producto (opcional) -->
+                <img src="{{.ImagenPrincipal}}" class="card-img-top" style="height: 200px; object-fit: cover;">
+
+                <div class="card-body">
+                    <h5 class="card-title">{{.Nombre}}</h5>
+                    <p class="card-text">{{.Descripcion}}</p>
+                    <p class="text-success fs-5"><strong>${{.Precio}}</strong></p>
+                    <p class="text-muted">Stock: {{.Stock}} unidades</p>
+                    <a href="/producto?id={{.ID}}" class="btn btn-primary w-100">Ver Detalles</a>
+                </div>
+            </div>
+        </div>
+        {{end}}
+    </div>
+</div>
 
 {{template "footer"}}
 {{end}}
