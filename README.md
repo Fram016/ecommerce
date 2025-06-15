@@ -63,11 +63,18 @@ El servidor estará disponible en [http://localhost:8080](http://localhost:8080)
 
 ## Recursos usados
 
-- [Bootstrap](https://getbootstrap.com/) para estilos CSS
-- [Gorilla Mux](https://github.com/gorilla/mux) para enrutamiento
-- [Gorilla Sessions](https://github.com/gorilla/sessions) para manejo de sesiones
-- [Go SQL Driver MySQL](https://github.com/go-sql-driver/mysql) para conexión a la base de datos
+## Herramientas usadas
 
+- **Driver mysql de GO**: Se usó para conectar a la base de datos. Aunque se trabaja con MariaDB, el driver es igual de compatible.
+- **Gotgotenv**: Herramienta necesaria para tener las credenciales de conexión a la base de datos, además de utilidad extensa para variables de entorno que podrían implementarse a futuro.
+- **Mux**: Se usa para la gestión de rutas y es útil para manejar solicitudes HTTP en este esquema de modelo, vista, controlador.
+- **NPM**: Para gestión de dependencias del frontend.
+- **Bootstrap**: Para el diseño responsive de la interfaz.
+- **Bcrypt**: Se usó esta útil herramienta para la encriptación de contraseñas, ya que es un HASH único y solo es comparable y válido si la contraseña es correcta, sin necesidad de uno elaborar la lógica de encriptación.
+- **Gorilla Sessions**: Esencial para manejar las sesiones y las cookies donde se almacena la sesión local. Muy útil para el desarrollo del backend.
+- **Templates**: Se usó la herramienta de templates de GO, resultando muy útil para el desarrollo del frontend más modular, en cierto punto parecido a Blade de Laravel en la forma en la que se utilizó.
+
+---
 ---
 
 © 2025 Ecommerce-Go. Todos los derechos reservados.
