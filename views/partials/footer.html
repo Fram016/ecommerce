@@ -1,13 +1,16 @@
 {{define "footer"}}
-<footer>
+</main>
+<footer class="bg-dark text-white text-center py-3 mt-5">
     <div class="container">
-        <p>© 2025 Mi Ecommerce. Todos los derechos reservados.</p>
+        <p>© 2025 Ecommerce. Todos los derechos reservados.</p>
         <div class="footer-links">
-            <a href="/terminos">Términos de servicio</a> | 
-            <a href="/privacidad">Política de privacidad</a>
+            <a href="/terminos" class="text-white">Términos de servicio</a> |
+            <a href="/privacidad" class="text-white">Política de privacidad</a>
         </div>
     </div>
 </footer>
+<!-- Importar Bootstrap JS desde node_modules -->
+<script src="/static/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 {{end}}

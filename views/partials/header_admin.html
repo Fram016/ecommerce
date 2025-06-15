@@ -1,29 +1,35 @@
-{{define "header_admin"}}
+{{define "header_cliente"}}
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
-    <title>Admin - Mi Ecommerce</title>
-    <link rel="stylesheet" href="/static/css/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido al Ecommerce</title>
+    <!-- Importar Bootstrap desde node_modules -->
+    <link rel="stylesheet" href="/static/bootstrap/dist/css/bootstrap.min.css">
 </head>
 
-<body>
-    <header>
+<body class="d-flex flex-column min-vh-100">
+    <!-- Header -->
+    <header class="bg-primary text-white py-3">
         <div class="container">
-            <div class="logo">
-                <h1>Mi Ecommerce</h1>
+            <div class="d-flex justify-content-between align-items-center">
+                <h1 class="h3">Bienvenido a nuestro Ecommerce</h1>
+                <nav>
+                    <ul class="nav">
+                        <li class="nav-item"><a href="/" class="nav-link text-white">Inicio</a></li>
+                        <li class="nav-item"><a href="/admin/productos" class="nav-link text-white">Productos</a></li>
+                        <li class="nav-item"><a href="/admin/categorias" class="nav-link text-white">Categorías</a></li>
+                        <li class="nav-item"><a href="/admin/login" class="nav-link text-white">Iniciar sesión</a></li>
+                        <li class="nav-item"><a href="/admin/registrarse" class="nav-link text-white">Registrarse</a>
+                        </li>
+                        <li class="nav-item"><a href="/admin/cerrar-sesion" class="nav-link text-white">Cerrar
+                                sesión</a></li>
+                    </ul>
+                </nav>
             </div>
-            <nav>
-                <a href="/">Inicio</a>
-                <a href="/admin/productos">Productos</a>
-                <a href="/admin/categorias">Categorías</a>
-                <a href="/admin/login">Iniciar sesión</a>
-                <a href="/admin/registrarse">Registrarse</a>
-                <a href="/admin/cerrar-sesion">Cerrar sesión</a>
-            </nav>
         </div>
     </header>
+    <main class="container mt-5 flex-grow-1">
     {{end}}
