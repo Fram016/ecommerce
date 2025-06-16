@@ -16,3 +16,6 @@ public/
 # Otros archivos generados
 *.log
 *.tgz
+
+# variables de entorno
+.env
