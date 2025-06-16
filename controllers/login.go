@@ -70,11 +70,14 @@ func ProcesarLogin(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		// Guardar los datos de la sesión
 		session.Values["usuario_id"] = usuario.ID
 		session.Values["rol"] = usuario.Rol
+		session.Values["correo"] = usuario.Correo
+		session.Values["nombre"] = usuario.Nombre
 
 		// Opcionalmente, podemos establecer opciones de expiración de la cookie
 		session.Options = &sessions.Options{
 			Path:   "/",
-			MaxAge: 3600, // La sesión expirará en 1 hora
+			MaxAge: 21600, // La sesión expirará en 6 horas
+			SameSite: http.SameSiteLaxMode, // Evitar CSRF
 		}
 
 		// Guardar la sesión
