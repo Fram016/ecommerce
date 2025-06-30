@@ -21,6 +21,10 @@ type ViewData struct {
 	Correo     string
 	Nombre     string
 	Producto   models.Producto
+	Categorias []models.Categoria
+	Categoria  models.Categoria
+	Usuarios   []models.Usuario
+	Usuario   models.Usuario
 }
 
 // Crear el store de sesiones con una clave secreta

@@ -1,62 +1,133 @@
 {{define "index_admin"}}
 {{template "header_admin" .}}
 
-<main class="container mt-5 flex-grow-1">
-    <h2 class="mb-4">Panel de Administración</h2>
+<main class="container mt-4 flex-grow-1">
+    <!-- Header del Dashboard -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="mb-1">Panel de Administración</h2>
+            <p class="text-muted">Gestiona tu tienda desde este panel centralizado</p>
+        </div>
+    </div>
 
     <!-- Sección de accesos rápidos -->
     <div class="row mb-5">
-        <div class="col-md-4">
-            <div class="card shadow-sm">
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card border-primary shadow-sm h-100">
                 <div class="card-body text-center">
                     <h5 class="card-title">Clientes</h5>
-                    <p class="card-text">Gestión de usuarios registrados.</p>
-                    <a href="/admin/clientes" class="btn btn-outline-primary w-100">Ver Clientes</a>
+                    <p class="card-text">Gestión de usuarios registrados</p>
+                    <a href="/admin/usuarios" class="btn btn-primary w-100">Ver Clientes</a>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div class="card shadow-sm">
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card border-success shadow-sm h-100">
                 <div class="card-body text-center">
                     <h5 class="card-title">Categorías</h5>
-                    <p class="card-text">Organizá tus productos por categoría.</p>
-                    <a href="/admin/categorias" class="btn btn-outline-success w-100">Ver Categorías</a>
+                    <p class="card-text">Organiza tus productos por categoría</p>
+                    <a href="/admin/categorias" class="btn btn-success w-100">Ver Categorías</a>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div class="card shadow-sm">
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card border-warning shadow-sm h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Productos</h5>
+                    <p class="card-text">Administra tu catálogo de productos</p>
+                    <a href="/admin/productos" class="btn btn-warning w-100">Ver Productos</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card border-danger shadow-sm h-100">
                 <div class="card-body text-center">
                     <h5 class="card-title">Pedidos</h5>
-                    <p class="card-text">Revisá y administrá los pedidos realizados.</p>
-                    <a href="/admin/pedidos" class="btn btn-outline-danger w-100">Ver Pedidos</a>
+                    <p class="card-text">Revisa y administra los pedidos</p>
+                    <a href="/admin/pedidos" class="btn btn-danger w-100">Ver Pedidos</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Acciones Rápidas -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card bg-light">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Acciones Rápidas</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <a href="/admin/producto/crear" class="btn btn-outline-success w-100">
+                                Nuevo Producto
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="/admin/categoria/crear" class="btn btn-outline-primary w-100">
+                                Nueva Categoría
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="/admin/usuario/crear" class="btn btn-outline-info w-100">
+                                Nuevo Usuario
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Sección de productos recientes -->
-    <h3 class="mb-3">Productos Recientes</h3>
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">Productos Recientes</h3>
+                <a href="/admin/productos" class="btn btn-outline-primary btn-sm">Ver Todos</a>
+            </div>
+            <hr>
+        </div>
+    </div>
+
     <div class="row">
         {{range .Productos}}
-        <div class="col-md-4 mb-4">
+        <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
             <div class="card shadow-sm h-100">
-                <img src="/{{.ImagenPrincipal}}" class="card-img-top" alt="Imagen del producto" style="height: 200px; object-fit: cover;">
+                <img src="/{{.ImagenPrincipal}}" class="card-img-top" alt="{{.Nombre}}" style="height: 200px; object-fit: cover;">
                 <div class="card-body">
-                    <h5 class="card-title">{{.Nombre}}</h5>
-                    <p class="card-text">{{.Descripcion}}</p>
-                    <p class="text-success fw-bold">${{.Precio}}</p>
-                    <a href="/admin/producto?id={{.ID}}" class="btn btn-primary btn-sm">Ver Detalles</a>
-                    <a href="/admin/producto/editar?id={{.ID}}" class="btn btn-warning btn-sm">Editar</a>
-                    <a href="/admin/producto/eliminar?id={{.ID}}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar este producto?')">Eliminar</a>
+                    <h6 class="card-title">{{.Nombre}}</h6>
+                    <p class="card-text text-muted small">{{.Descripcion}}</p>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-success fw-bold">${{.Precio}}</span>
+                        <small class="text-muted">Stock: {{.Stock}}</small>
+                    </div>
+                </div>
+                <div class="card-footer bg-light">
+                    <div class="btn-group w-100" role="group">
+                        <a href="/admin/producto?id={{.ID}}" class="btn btn-outline-info btn-sm">Ver</a>
+                        <a href="/admin/producto/editar?id={{.ID}}" class="btn btn-outline-warning btn-sm">Editar</a>
+                        <a href="/admin/producto/eliminar?id={{.ID}}" class="btn btn-outline-danger btn-sm" 
+                           onclick="return confirm('¿Eliminar este producto?')">Eliminar</a>
+                    </div>
                 </div>
             </div>
         </div>
         {{else}}
         <div class="col-12">
-            <p class="text-center">No hay productos disponibles.</p>
+            <div class="card bg-light">
+                <div class="card-body text-center py-5">
+                    <h4 class="text-muted">No hay productos aún</h4>
+                    <p class="text-muted">Comienza agregando tu primer producto al catálogo</p>
+                    <a href="/admin/producto/crear" class="btn btn-primary">
+                        Crear Primer Producto
+                    </a>
+                </div>
+            </div>
         </div>
         {{end}}
     </div>

@@ -1,4 +1,4 @@
-{{define "ver_categoria"}}
+{{define "editar_categoria"}}
 {{template "header_admin" .}}
 
 <div class="container mt-4">
@@ -7,28 +7,31 @@
             <!-- Card para el formulario -->
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title mb-0">Ver Categoría</h4>
+                    <h4 class="card-title mb-0">Editar Categoría</h4>
                 </div>
                 <div class="card-body">
-                    <form>
+                    <form action="/admin/categoria/editar" method="POST">
+                        <!-- Campo oculto para ID -->
+                        <input type="hidden" name="id" value="{{.Categoria.ID}}">
+                        
                         <!-- Campo Nombre -->
                         <div class="mb-3">
                             <label for="nombre" class="form-label">Nombre de la Categoría</label>
-                            <input type="text" class="form-control bg-light text-muted" name="nombre" id="nombre" value="{{.Categoria.Nombre}}" readonly>
-                            <div class="form-text">Nombre actual de la categoría</div>
+                            <input type="text" class="form-control" name="nombre" id="nombre" value="{{.Categoria.Nombre}}" required>
+                            <div class="form-text">Ingresa un nombre descriptivo para la categoría</div>
                         </div>
 
                         <!-- Campo Descripción -->
                         <div class="mb-3">
                             <label for="descripcion" class="form-label">Descripción</label>
-                            <textarea class="form-control bg-light text-muted" name="descripcion" id="descripcion" rows="4" readonly>{{.Categoria.Descripcion}}</textarea>
-                            <div class="form-text">Descripción actual de la categoría</div>
+                            <textarea class="form-control" name="descripcion" id="descripcion" rows="4" required>{{.Categoria.Descripcion}}</textarea>
+                            <div class="form-text">Describe brevemente el tipo de productos que incluirá esta categoría</div>
                         </div>
 
                         <!-- Botones -->
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <a href="/admin/categorias" class="btn btn-secondary me-md-2">Volver</a>
-                            <a href="/admin/categoria/editar?id={{.Categoria.ID}}" class="btn btn-primary">Editar Categoría</a>
+                            <a href="/admin/categorias" class="btn btn-secondary me-md-2">Cancelar</a>
+                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                         </div>
                     </form>
                 </div>

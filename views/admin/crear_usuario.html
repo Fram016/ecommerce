@@ -1,26 +1,68 @@
-{{template "header_admin.html" .}}
+{{define "crear_usuario"}}
+{{template "header_admin" .}}
 
-<h1>Crear Nuevo Usuario</h1>
-<form action="/usuario/crear" method="POST">
-    <label for="correo">Correo:</label>
-    <input type="email" name="correo" id="correo" required><br>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <!-- Card para el formulario -->
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title mb-0">Crear Nuevo Usuario</h4>
+                </div>
+                <div class="card-body">
+                    <form action="/admin/usuario/crear" method="POST">
+                        <!-- Campo Correo -->
+                        <div class="mb-3">
+                            <label for="correo" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" name="correo" id="correo" required>
+                            <div class="form-text">Dirección de correo electrónico del usuario</div>
+                        </div>
 
-    <label for="nombre">Nombre:</label>
-    <input type="text" name="nombre" id="nombre" required><br>
+                        <!-- Campo Nombre -->
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre Completo</label>
+                            <input type="text" class="form-control" name="nombre" id="nombre" required>
+                            <div class="form-text">Nombre completo del usuario</div>
+                        </div>
 
-    <label for="clave_segura">Contraseña:</label>
-    <input type="password" name="clave_segura" id="clave_segura" required><br>
+                        <!-- Campo Contraseña -->
+                        <div class="mb-3">
+                            <label for="clave_segura" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" name="clave_segura" id="clave_segura" required>
+                            <div class="form-text">Contraseña para el acceso del usuario</div>
+                        </div>
 
-    <label for="rol">Rol:</label>
-    <select name="rol" id="rol" required>
-        <option value="admin">admin</option>
-        <option value="cliente">cliente</option>
-    </select><br>
+                        <!-- Campo Rol -->
+                        <div class="mb-3">
+                            <label for="rol" class="form-label">Rol del Usuario</label>
+                            <select class="form-select" name="rol" id="rol" required>
+                                <option value="">Seleccionar rol...</option>
+                                <option value="admin">Administrador</option>
+                                <option value="cliente">Cliente</option>
+                            </select>
+                            <div class="form-text">Selecciona el rol que tendrá el usuario en el sistema</div>
+                        </div>
 
-    <button type="submit">Crear Usuario</button>
-</form>
+                        <!-- Botones -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="/admin/usuarios" class="btn btn-secondary me-md-2">Cancelar</a>
+                            <button type="submit" class="btn btn-primary">Crear Usuario</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<br>
-<a href="/usuarios">Volver a la lista de usuarios</a>
+    <!-- Enlace adicional -->
+    <div class="row mt-4">
+        <div class="col-12 text-center">
+            <a href="/admin/usuarios" class="btn btn-outline-secondary">
+                ← Volver a la lista de usuarios
+            </a>
+        </div>
+    </div>
+</div>
 
-{{template "footer.html" .}}
+{{template "footer" .}}
+{{end}}

@@ -1,18 +1,50 @@
-<!-- crear_categoria.html -->
-{{template "header_admin.html" .}}
+{{define "crear_categoria"}}
+{{template "header_admin" .}}
 
-<h1>Crear Nueva Categoría</h1>
-<form action="/admin/categoria/crear" method="POST">
-    <label for="nombre">Nombre:</label>
-    <input type="text" name="nombre" id="nombre" required><br>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <!-- Card para el formulario -->
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title mb-0">Crear Nueva Categoría</h4>
+                </div>
+                <div class="card-body">
+                    <form action="/admin/categoria/crear" method="POST">
+                        <!-- Campo Nombre -->
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre de la Categoría</label>
+                            <input type="text" class="form-control" name="nombre" id="nombre" required>
+                            <div class="form-text">Ingresa un nombre descriptivo para la categoría</div>
+                        </div>
 
-    <label for="descripcion">Descripción:</label>
-    <textarea name="descripcion" id="descripcion" required></textarea><br>
+                        <!-- Campo Descripción -->
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">Descripción</label>
+                            <textarea class="form-control" name="descripcion" id="descripcion" rows="4" required></textarea>
+                            <div class="form-text">Describe brevemente el tipo de productos que incluirá esta categoría</div>
+                        </div>
 
-    <button type="submit">Crear Categoría</button>
-</form>
+                        <!-- Botones -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="/admin/categorias" class="btn btn-secondary me-md-2">Cancelar</a>
+                            <button type="submit" class="btn btn-primary">Crear Categoría</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<br>
-<a href="/admin/categorias">Volver a la lista de categorías</a>
+    <!-- Enlace adicional -->
+    <div class="row mt-4">
+        <div class="col-12 text-center">
+            <a href="/admin/categorias" class="btn btn-outline-secondary">
+                ← Volver a la lista de categorías
+            </a>
+        </div>
+    </div>
+</div>
 
-{{template "footer.html" .}}
+{{template "footer" .}}
+{{end}}

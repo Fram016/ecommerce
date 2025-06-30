@@ -18,16 +18,22 @@ func ListarCategorias(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		http.Error(w, "Error al obtener categorías", http.StatusInternalServerError)
 		return
 	}
-
-	// Cargamos la plantilla (vista) donde mostraremos las categorías
-	tmpl, err := template.ParseFiles("views/admin/categorias.html")
+	viewData := ViewData{
+		Categorias: categorias,
+	}
+	tmpl := template.Must(template.ParseFiles(
+		"views/partials/header_admin.html",
+		"views/admin/categorias.html",
+		"views/partials/footer.html",
+	))
+	// Pasamos las categorías a la vista y renderizamos todas las plantillas (header, cuerpo, footer)
+	err = tmpl.ExecuteTemplate(w, "categorias", viewData)
 	if err != nil {
-		http.Error(w, "Error al cargar la vista de categorías", http.StatusInternalServerError)
+		// Si ocurre un error al renderizar la plantilla, mostramos una respuesta 500
+		http.Error(w, "Error al renderizar la vista de categorías", http.StatusInternalServerError)
 		return
 	}
 
-	// Pasamos las categorías a la vista
-	tmpl.Execute(w, categorias)
 }
 
 // CrearCategoria maneja la creación de una nueva categoría
@@ -49,19 +55,23 @@ func CrearCategoria(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		}
 
 		// Redirigir a la lista de categorías después de crear una nueva
-		http.Redirect(w, r, "/categorias", http.StatusSeeOther)
+		http.Redirect(w, r, "/admin/categorias", http.StatusSeeOther)
 		return
 	}
 
-	// Si es GET, mostramos el formulario para crear una nueva categoría
-	tmpl, err := template.ParseFiles("views/crear_categoria.html")
+	viewData := ViewData{}
+	tmpl := template.Must(template.ParseFiles(
+		"views/partials/header_admin.html",
+		"views/admin/crear_categoria.html",
+		"views/partials/footer.html",
+	))
+	// Pasamos las categorías a la vista y renderizamos todas las plantillas (header, cuerpo, footer)
+	err := tmpl.ExecuteTemplate(w, "crear_categoria", viewData)
 	if err != nil {
-		http.Error(w, "Error al cargar el formulario de creación", http.StatusInternalServerError)
+		// Si ocurre un error al renderizar la plantilla, mostramos una respuesta 500
+		http.Error(w, "Error al renderizar la vista de categorías", http.StatusInternalServerError)
 		return
 	}
-
-	// Renderizamos el formulario
-	tmpl.Execute(w, nil)
 }
 
 // ObtenerCategoria obtiene una categoría por su ID
@@ -87,15 +97,21 @@ func ObtenerCategoria(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	// Renderizamos la vista de la categoría
-	tmpl, err := template.ParseFiles("views/detalle_categoria.html")
+	viewData := ViewData{
+		Categoria: categoria,
+	}
+	tmpl := template.Must(template.ParseFiles(
+		"views/partials/header_admin.html",
+		"views/admin/detalle_categoria.html",
+		"views/partials/footer.html",
+	))
+	// Pasamos la categoría a la vista y renderizamos todas las plantillas (header, cuerpo, footer)
+	err = tmpl.ExecuteTemplate(w, "ver_categoria", viewData)
 	if err != nil {
-		http.Error(w, "Error al cargar la vista de categoría", http.StatusInternalServerError)
+		// Si ocurre un error al renderizar la plantilla, mostramos una respuesta 500
+		http.Error(w, "Error al renderizar la vista de categorías", http.StatusInternalServerError)
 		return
 	}
-
-	// Pasamos la categoría a la vista para que se renderice
-	tmpl.Execute(w, categoria)
 }
 
 // ModificarCategoria maneja la modificación de una categoría
@@ -123,41 +139,46 @@ func ModificarCategoria(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 			return
 		}
 
-		// Mostrar el formulario con los datos actuales de la categoría
-		tmpl, err := template.ParseFiles("views/editar_categoria.html")
+		viewData := ViewData{
+			Categoria: categoria,
+		}
+		tmpl := template.Must(template.ParseFiles(
+			"views/partials/header_admin.html",
+			"views/admin/editar_categoria.html",
+			"views/partials/footer.html",
+		))
+		// Pasamos la categoría a la vista y renderizamos todas las plantillas (header, cuerpo, footer)
+		err = tmpl.ExecuteTemplate(w, "editar_categoria", viewData)
 		if err != nil {
-			http.Error(w, "Error al cargar la vista de edición", http.StatusInternalServerError)
+			// Si ocurre un error al renderizar la plantilla, mostramos una respuesta 500
+			http.Error(w, "Error al renderizar la vista de categorías", http.StatusInternalServerError)
 			return
 		}
 
-		// Pasamos la categoría a la vista para mostrar los datos actuales
-		tmpl.Execute(w, categoria)
-		return
-	}
+		// Si es una solicitud POST, actualizamos la categoría con los nuevos datos
+		if r.Method == http.MethodPost {
+			// Obtener los datos del formulario
+			nombre := r.FormValue("nombre")
+			descripcion := r.FormValue("descripcion")
 
-	// Si es una solicitud POST, actualizamos la categoría con los nuevos datos
-	if r.Method == http.MethodPost {
-		// Obtener los datos del formulario
-		nombre := r.FormValue("nombre")
-		descripcion := r.FormValue("descripcion")
+			// Crear un nuevo objeto categoría con los datos actualizados
+			categoria := models.Categoria{
+				ID:          id,
+				Nombre:      nombre,
+				Descripcion: descripcion,
+			}
 
-		// Crear un nuevo objeto categoría con los datos actualizados
-		categoria := models.Categoria{
-			ID:          id,
-			Nombre:      nombre,
-			Descripcion: descripcion,
-		}
+			// Llamar al modelo para actualizar la categoría en la base de datos
+			err = models.ModificarCategoria(db, categoria)
+			if err != nil {
+				http.Error(w, "Error al modificar la categoría", http.StatusInternalServerError)
+				return
+			}
 
-		// Llamar al modelo para actualizar la categoría en la base de datos
-		err = models.ModificarCategoria(db, categoria)
-		if err != nil {
-			http.Error(w, "Error al modificar la categoría", http.StatusInternalServerError)
+			// Redirigir a la página de detalles de la categoría después de la modificación
+			http.Redirect(w, r, fmt.Sprintf("/categoria?id=%d", id), http.StatusSeeOther)
 			return
 		}
-
-		// Redirigir a la página de detalles de la categoría después de la modificación
-		http.Redirect(w, r, fmt.Sprintf("/categoria?id=%d", id), http.StatusSeeOther)
-		return
 	}
 }
 
@@ -185,5 +206,5 @@ func EliminarCategoria(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	}
 
 	// Redirigir a la lista de categorías después de eliminar una
-	http.Redirect(w, r, "/categorias", http.StatusSeeOther)
+	http.Redirect(w, r, "/admin/categorias", http.StatusSeeOther)
 }

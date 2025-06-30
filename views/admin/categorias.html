@@ -1,19 +1,42 @@
-<!-- categorias.html -->
-{{template "header_admin.html" .}}
+{{define "categorias"}}
+{{template "header_admin" .}}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="text-left mb-4">Lista de Categorías</h2>
+        </div>
+    </div>
+    <div class="row">
+        {{range .Categorias}}
+        <div class="col-md-4 mb-4">
+            <!-- Tarjeta de Categoría -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">{{.Nombre}}</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Descripción:</strong> {{.Descripcion}}</p>
+                    <p><strong>ID:</strong> {{.ID}}</p>
 
-<h2>Lista de Categorías</h2>
-<ul>
-    {{range .}}
-    <li>
-        <strong>{{.Nombre}}</strong><br>
-        Descripción: {{.Descripcion}}<br>
-        <a href="/admin/categoria?id={{.ID}}">Ver Detalles</a> | 
-        <a href="/admin/categoria/editar?id={{.ID}}">Editar</a> | 
-        <a href="/admin/categoria/eliminar?id={{.ID}}" onclick="return confirm('¿Estás seguro de que deseas eliminar esta categoría?')">Eliminar</a>
-    </li>
-    {{end}}
-</ul>
-<br>
-<a href="/admin/categoria/crear">Crear Nueva Categoría</a>
+                    <a href="/admin/categoria?id={{.ID}}" class="btn btn-info btn-sm">Ver Detalles</a>
+                    <a href="/admin/categoria/editar?id={{.ID}}" class="btn btn-warning btn-sm">Editar</a>
+                    <a href="/admin/categoria/eliminar?id={{.ID}}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar esta categoría?')">Eliminar</a>
+                </div>
+            </div>
+        </div>
+        {{else}}
+        <div class="col-12">
+            <p>No hay categorías disponibles.</p>
+        </div>
+        {{end}}
+    </div>
 
-{{template "footer.html" .}}
+    <div class="row mt-4">
+        <div class="col-12 text-left">
+            <a href="/admin/categoria/crear" class="btn btn-primary">Crear Nueva Categoría</a>
+        </div>
+    </div>
+</div>
+
+{{template "footer"}}
+{{end}}

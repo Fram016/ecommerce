@@ -1,15 +1,58 @@
-{{template "header_admin.html" .}}
+{{define "ver_usuario"}}
+{{template "header_admin" .}}
 
-    <h1>Detalles del Usuario</h1>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <!-- Card para el formulario -->
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title mb-0">Ver Usuario</h4>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <!-- Campo Correo -->
+                        <div class="mb-3">
+                            <label for="correo" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control bg-light text-muted" name="correo" id="correo" value="{{.Usuario.Correo}}" readonly>
+                            <div class="form-text">Dirección de correo electrónico del usuario</div>
+                        </div>
 
-    <p><strong>Nombre:</strong> {{.Nombre}}</p>
-    <p><strong>Correo:</strong> {{.Correo}}</p>
-    <p><strong>Rol:</strong> {{.Rol}}</p>
+                        <!-- Campo Nombre -->
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre Completo</label>
+                            <input type="text" class="form-control bg-light text-muted" name="nombre" id="nombre" value="{{.Usuario.Nombre}}" readonly>
+                            <div class="form-text">Nombre completo del usuario</div>
+                        </div>
 
-    <br>
-    <a href="/usuarios">Volver a la lista de usuarios</a>
-    <br>
-    <a href="/usuario/editar?id={{.ID}}">Editar Usuario</a> |
-    <a href="/usuario/eliminar?id={{.ID}}" onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?')">Eliminar Usuario</a>
+                        <!-- Campo Rol -->
+                        <div class="mb-3">
+                            <label for="rol" class="form-label">Rol del Usuario</label>
+                            <input type="text" class="form-control bg-light text-muted" name="rol" id="rol" value="{{.Usuario.Rol}}" readonly>
+                            <div class="form-text">Rol asignado al usuario en el sistema</div>
+                        </div>
 
-{{template "footer.html" .}}
+                        <!-- Botones -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="/admin/usuarios" class="btn btn-secondary me-md-2">Volver</a>
+                            <a href="/admin/usuario/editar?id={{.Usuario.ID}}" class="btn btn-warning me-md-2">Editar Usuario</a>
+                            <a href="/admin/direcciones?id={{.Usuario.ID}}" class="btn btn-info">Ver Direcciones</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enlace adicional -->
+    <div class="row mt-4">
+        <div class="col-12 text-center">
+            <a href="/admin/usuarios" class="btn btn-outline-secondary">
+                ← Volver a la lista de usuarios
+            </a>
+        </div>
+    </div>
+</div>
+
+{{template "footer" .}}
+{{end}}

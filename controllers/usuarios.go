@@ -20,16 +20,21 @@ func ListarUsuarios(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		http.Error(w, "Error al obtener usuarios", http.StatusInternalServerError)
 		return
 	}
-
-	// Cargamos la plantilla (vista) donde mostraremos los usuarios
-	tmpl, err := template.ParseFiles("views/usuarios.html")
+	viewData := ViewData{
+		Usuarios: usuarios,
+	}
+	tmpl := template.Must(template.ParseFiles(
+		"views/partials/header_admin.html",
+		"views/admin/usuarios.html",
+		"views/partials/footer.html",
+	))
+	// Pasamos los productos a la vista y renderizamos todas las plantillas (header, cuerpo, footer)
+	err = tmpl.ExecuteTemplate(w, "usuarios", viewData)
 	if err != nil {
-		http.Error(w, "Error al cargar la vista de usuarios", http.StatusInternalServerError)
+		// Si ocurre un error al renderizar la plantilla, mostramos una respuesta 500
+		http.Error(w, "Error al renderizar la vista de admin", http.StatusInternalServerError)
 		return
 	}
-
-	// Pasamos los usuarios a la vista
-	tmpl.Execute(w, usuarios)
 }
 
 // CrearUsuario maneja la creación de un nuevo usuario con encriptación de la contraseña usando bcrypt
@@ -62,19 +67,21 @@ func CrearUsuario(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		}
 
 		// Redirigir a la lista de usuarios después de crear uno nuevo
-		http.Redirect(w, r, "/usuarios", http.StatusSeeOther)
+		http.Redirect(w, r, "/admin/usuarios", http.StatusSeeOther)
 		return
 	}
 
-	// Si es GET, mostramos el formulario para crear un nuevo usuario
-	tmpl, err := template.ParseFiles("views/crear_usuario.html")
+	viewData := ViewData{}
+	tmpl := template.Must(template.ParseFiles(
+		"views/partials/header_admin.html",
+		"views/admin/crear_usuario.html",
+		"views/partials/footer.html",
+	))
+	err := tmpl.ExecuteTemplate(w, "crear_usuario", viewData)
 	if err != nil {
-		http.Error(w, "Error al cargar el formulario de creación", http.StatusInternalServerError)
+		http.Error(w, "Error al renderizar la vista de admin", http.StatusInternalServerError)
 		return
 	}
-
-	// Renderizamos el formulario
-	tmpl.Execute(w, nil)
 }
 
 // RegistrarUsuario maneja el registro de un nuevo usuario con rol "cliente" y encriptación de contraseña usando bcrypt
@@ -148,15 +155,19 @@ func ObtenerUsuario(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	// Renderizar la vista del usuario
-	tmpl, err := template.ParseFiles("views/detalle_usuario.html")
+	viewData := ViewData{
+		Usuario: usuario,
+	}
+	tmpl := template.Must(template.ParseFiles(
+		"views/partials/header_admin.html",
+		"views/admin/detalle_usuario.html",
+		"views/partials/footer.html",
+	))
+	err = tmpl.ExecuteTemplate(w, "ver_usuario", viewData)
 	if err != nil {
-		http.Error(w, "Error al cargar la vista del usuario", http.StatusInternalServerError)
+		http.Error(w, "Error al renderizar la vista de admin", http.StatusInternalServerError)
 		return
 	}
-
-	// Pasamos el usuario a la vista para que se renderice
-	tmpl.Execute(w, usuario)
 }
 
 // ModificarUsuario maneja la modificación de un usuario
@@ -184,16 +195,21 @@ func ModificarUsuario(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 			return
 		}
 
-		// Mostrar el formulario con los datos actuales del usuario
-		tmpl, err := template.ParseFiles("views/editar_usuario.html")
+		viewData := ViewData{
+			Usuario: usuario,
+		}
+		tmpl := template.Must(template.ParseFiles(
+			"views/partials/header_admin.html",
+			"views/admin/editar_usuario.html",
+			"views/partials/footer.html",
+		))
+		// Pasamos los productos a la vista y renderizamos todas las plantillas (header, cuerpo, footer)
+		err = tmpl.ExecuteTemplate(w, "editar_usuario", viewData)
 		if err != nil {
-			http.Error(w, "Error al cargar la vista de edición", http.StatusInternalServerError)
+			// Si ocurre un error al renderizar la plantilla, mostramos una respuesta 500
+			http.Error(w, "Error al renderizar la vista de admin", http.StatusInternalServerError)
 			return
 		}
-
-		// Pasamos el usuario a la vista para mostrar los datos actuales
-		tmpl.Execute(w, usuario)
-		return
 	}
 
 	// Si es una solicitud POST, actualizamos el usuario con los nuevos datos
@@ -221,7 +237,7 @@ func ModificarUsuario(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		}
 
 		// Redirigir a la página de detalles del usuario después de la modificación
-		http.Redirect(w, r, fmt.Sprintf("/usuario?id=%d", id), http.StatusSeeOther)
+		http.Redirect(w, r, fmt.Sprintf("/admin/usuario?id=%d", id), http.StatusSeeOther)
 		return
 	}
 }
@@ -250,5 +266,5 @@ func EliminarUsuario(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	}
 
 	// Redirigir a la lista de usuarios después de eliminar uno
-	http.Redirect(w, r, "/usuarios", http.StatusSeeOther)
+	http.Redirect(w, r, "/admin/usuarios", http.StatusSeeOther)
 }

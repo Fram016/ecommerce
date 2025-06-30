@@ -1,27 +1,129 @@
 {{define "index"}}
 {{template "header_cliente" .}}
 
-   <main class="container mt-5 flex-grow-1">
-    <h2>Lo más reciente</h2>
-    <p>Aquí podrías mostrar algunos productos destacados o recomendaciones de productos para tus usuarios.</p>
+<main class="flex-grow-1">
+    <!-- Productos Destacados -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-12 text-center">
+                    <h2 class="display-6 fw-bold mb-3">Productos Destacados</h2>
+                    <p class="text-muted lead">Los productos más populares de nuestra tienda</p>
+                </div>
+            </div>
 
-    <div class="row">
-        {{range .Productos}}
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <img src="{{.ImagenPrincipal}}" class="card-img-top" alt="Producto">
-                <div class="card-body">
-                    <h5 class="card-title">{{.Nombre}}</h5>
-                    <p class="card-text">Precio: {{.Precio}} USD</p>
-                    <p class="card-text">{{.Descripcion}}</p>
-                    <a href="/producto?id={{.ID}}" class="btn btn-primary">Ver detalles</a>
+            {{if .Productos}}
+            <div class="row g-4">
+                {{range .Productos}}
+                <div class="col-xl-3 col-lg-4 col-md-6">
+                    <div class="card h-100 shadow-sm border-0">
+                        <!-- Imagen del producto -->
+                        <div class="position-relative">
+                            {{if .ImagenPrincipal}}
+                                <img src="/{{.ImagenPrincipal}}" class="card-img-top" alt="{{.Nombre}}" style="height: 250px; object-fit: cover;">
+                            {{else}}
+                                <div class="bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
+                                    <span class="text-muted display-4">📷</span>
+                                </div>
+                            {{end}}
+                        </div>
+                        
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">{{.Nombre}}</h5>
+                            <p class="card-text text-muted flex-grow-1">{{.Descripcion}}</p>
+                            
+                            <!-- Precio -->
+                            <div class="mb-3">
+                                <h4 class="text-success fw-bold mb-0">${{.Precio}}</h4>
+                                <small class="text-muted">Precio por unidad</small>
+                            </div>
+                        </div>
+                        
+                        <!-- Footer con botones -->
+                        <div class="card-footer bg-white border-0">
+                            <div class="d-grid gap-2">
+                                <a href="/producto?id={{.ID}}" class="btn btn-outline-primary">
+                                    Ver Detalles
+                                </a>
+                                <a href="/carrito/agregar?id={{.ID}}" class="btn btn-primary">
+                                    Agregar al Carrito
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{end}}
+            </div>
+            
+            <!-- Ver más productos -->
+            <div class="row mt-5">
+                <div class="col-12 text-center">
+                    <a href="/productos" class="btn btn-primary btn-lg">
+                        Ver Todos los Productos →
+                    </a>
+                </div>
+            </div>
+            
+            {{else}}
+            <!-- Estado vacío -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="text-center py-5">
+                        <div class="mb-4">
+                            <span class="display-1">🛍️</span>
+                        </div>
+                        <h3 class="text-muted mb-3">Próximamente nuevos productos</h3>
+                        <p class="text-muted mb-4">Estamos trabajando para traerte los mejores productos. ¡Vuelve pronto!</p>
+                        <a href="/contacto" class="btn btn-primary">
+                            📧 Notificarme cuando lleguen
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {{end}}
+        </div>
+    </section>
+
+    <!-- Sección de Beneficios -->
+    <section class="bg-light py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 text-center mb-4">
+                    <div class="card border-0 bg-transparent">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <span class="display-4">🚚</span>
+                            </div>
+                            <h5 class="card-title">Envío Rápido</h5>
+                            <p class="card-text text-muted">Recibe tus productos en 24-48 horas</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center mb-4">
+                    <div class="card border-0 bg-transparent">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <span class="display-4">💳</span>
+                            </div>
+                            <h5 class="card-title">Pago Seguro</h5>
+                            <p class="card-text text-muted">Múltiples métodos de pago seguros</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center mb-4">
+                    <div class="card border-0 bg-transparent">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <span class="display-4">🔄</span>
+                            </div>
+                            <h5 class="card-title">Devoluciones</h5>
+                            <p class="card-text text-muted">30 días para cambios y devoluciones</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        {{else}}
-        <p>No hay productos disponibles.</p>
-        {{end}}
-    </div>
+    </section>
 </main>
 
 {{template "footer"}}
