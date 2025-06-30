@@ -156,29 +156,29 @@ func ModificarCategoria(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		}
 	}
 	// Si es una solicitud POST, actualizamos la categoría con los nuevos datos
-		if r.Method == http.MethodPost {
-			// Obtener los datos del formulario
-			nombre := r.FormValue("nombre")
-			descripcion := r.FormValue("descripcion")
+	if r.Method == http.MethodPost {
+		// Obtener los datos del formulario
+		nombre := r.FormValue("nombre")
+		descripcion := r.FormValue("descripcion")
 
-			// Crear un nuevo objeto categoría con los datos actualizados
-			categoria := models.Categoria{
-				ID:          id,
-				Nombre:      nombre,
-				Descripcion: descripcion,
-			}
+		// Crear un nuevo objeto categoría con los datos actualizados
+		categoria := models.Categoria{
+			ID:          id,
+			Nombre:      nombre,
+			Descripcion: descripcion,
+		}
 
-			// Llamar al modelo para actualizar la categoría en la base de datos
-			err = models.ModificarCategoria(db, categoria)
-			if err != nil {
-				http.Error(w, "Error al modificar la categoría", http.StatusInternalServerError)
-				return
-			}
-
-			// Redirigir a la página de detalles de la categoría después de la modificación
-			http.Redirect(w, r, fmt.Sprintf("/admin/categoria?id=%d", id), http.StatusSeeOther)
+		// Llamar al modelo para actualizar la categoría en la base de datos
+		err = models.ModificarCategoria(db, categoria)
+		if err != nil {
+			http.Error(w, "Error al modificar la categoría", http.StatusInternalServerError)
 			return
 		}
+
+		// Redirigir a la página de detalles de la categoría después de la modificación
+		http.Redirect(w, r, fmt.Sprintf("/admin/categoria?id=%d", id), http.StatusSeeOther)
+		return
+	}
 }
 
 // EliminarCategoria maneja la eliminación de una categoría por su ID
