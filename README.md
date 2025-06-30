@@ -1,6 +1,35 @@
 # Ecommerce-Go
 
-Proyecto de Ecommerce desarrollado en Go, utilizando Gorilla Mux para el enrutamiento, sesiones seguras, y Bootstrap para el frontend.
+- **Estudiante:** Francisco López  
+- **Curso:** Programación Orientada a Objetos
+- **Fecha:** Junio 2024
+
+## Objetivo del Programa
+
+El objetivo de este proyecto es desarrollar una plataforma de comercio electrónico (Ecommerce) utilizando Go como lenguaje principal, que permita la gestión de productos, categorías, usuarios y direcciones, diferenciando funcionalidades entre administradores y clientes. El sistema busca ser seguro, modular y fácil de mantener, integrando buenas prácticas de desarrollo web y seguridad.
+
+## Principales Funcionalidades
+
+- **Registro y login de usuarios:**  
+  Permite a los usuarios crear una cuenta y autenticarse en el sistema. Se manejan roles de usuario (admin y cliente) para controlar el acceso a diferentes funcionalidades.
+
+- **Gestión de productos y categorías (CRUD):**  
+  Los administradores pueden crear, leer, actualizar y eliminar productos y categorías. Los productos incluyen información como nombre, descripción, precio, stock, imágenes y categoría.
+
+- **Gestión de direcciones de clientes:**  
+  Los clientes pueden agregar, editar y eliminar sus direcciones de envío, eligiendo una dirección principal para sus pedidos.
+
+- **Subida y gestión de imágenes de productos:**  
+  Los administradores pueden subir imágenes para los productos, facilitando una mejor presentación visual en la tienda.
+
+- **Vistas diferenciadas para admin y clientes:**  
+  El sistema muestra diferentes interfaces y opciones según el rol del usuario, asegurando que solo los administradores accedan a la gestión interna.
+
+- **Panel de administración:**  
+  Acceso exclusivo para administradores, donde pueden gestionar usuarios, productos, categorías y pedidos.
+
+- **Carrito de compras (pendiente):**  
+  Funcionalidad planificada para permitir a los clientes agregar productos a un carrito y realizar pedidos.
 
 ## Requisitos
 
@@ -47,34 +76,17 @@ go run main.go
 
 El servidor estará disponible en [http://localhost:8080](http://localhost:8080).
 
-## Funcionalidades
-
-- Registro y login de usuarios (con roles: admin y cliente)
-- CRUD de productos y categorías (solo admin)
-- Gestión de direcciones de clientes
-- Subida y gestión de imágenes de productos
-- Vistas diferenciadas para admin y clientes
-
-## Pendiente
-
-- Gestión de perfil
-- Carrito
-- Panel de administración
-
-## Recursos usados
-
 ## Herramientas usadas
 
-- **Driver mysql de GO**: Se usó para conectar a la base de datos. Aunque se trabaja con MariaDB, el driver es igual de compatible.
-- **Gotgotenv**: Herramienta necesaria para tener las credenciales de conexión a la base de datos, además de utilidad extensa para variables de entorno que podrían implementarse a futuro.
-- **Mux**: Se usa para la gestión de rutas y es útil para manejar solicitudes HTTP en este esquema de modelo, vista, controlador.
+- **Driver mysql de GO**: Para conectar a la base de datos (compatible con MariaDB).
+- **Gotgotenv**: Para gestionar credenciales y variables de entorno.
+- **Mux**: Para la gestión de rutas HTTP.
 - **NPM**: Para gestión de dependencias del frontend.
 - **Bootstrap**: Para el diseño responsive de la interfaz.
-- **Bcrypt**: Se usó esta útil herramienta para la encriptación de contraseñas, ya que es un HASH único y solo es comparable y válido si la contraseña es correcta, sin necesidad de uno elaborar la lógica de encriptación.
-- **Gorilla Sessions**: Esencial para manejar las sesiones y las cookies donde se almacena la sesión local. Muy útil para el desarrollo del backend.
-- **Templates**: Se usó la herramienta de templates de GO, resultando muy útil para el desarrollo del frontend más modular, en cierto punto parecido a Blade de Laravel en la forma en la que se utilizó.
+- **Bcrypt**: Para la encriptación segura de contraseñas.
+- **Gorilla Sessions**: Para manejo seguro de sesiones y cookies.
+- **Templates**: Para el frontend modular con plantillas HTML en Go.
 
----
 ---
 
 © 2025 Ecommerce-Go. Todos los derechos reservados.
