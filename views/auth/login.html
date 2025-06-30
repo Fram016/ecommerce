@@ -32,6 +32,12 @@
 
                             <!-- Botón de submit -->
                             <button type="submit" class="btn btn-primary w-100">Iniciar sesión</button>
+
+                            {{ if .Error }}
+                            <div class="alert alert-danger text-center" role="alert">
+                                {{ .Error }}
+                            </div>
+                            {{ end }}
                         </form>
                         <div class="card-body text-center">
                             <!-- Botón de regreso -->

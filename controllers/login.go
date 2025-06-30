@@ -10,6 +10,10 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+type LoginPageData struct {
+	Error string
+}
+
 // Crear el store de sesiones con una clave secreta
 var store = sessions.NewCookieStore([]byte("VoladorDeClaveSecreta*"))
 
@@ -28,13 +32,21 @@ func MostrarLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Obtener mensajes flash
+	flashes := session.Flashes("error")
+	var mensajeError string
+	if len(flashes) > 0 {
+		mensajeError = flashes[0].(string)
+	}
+	session.Save(r, w)
+
 	// Mostrar el formulario de login
 	tmpl, err := template.ParseFiles("views/auth/login.html")
 	if err != nil {
 		http.Error(w, "Error al cargar el formulario de login", http.StatusInternalServerError)
 		return
 	}
-	tmpl.Execute(w, nil)
+	tmpl.Execute(w, LoginPageData{Error: mensajeError})
 }
 
 // ProcesarLogin maneja el inicio de sesión de los usuarios y crea una sesión
@@ -47,8 +59,13 @@ func ProcesarLogin(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		// Obtener el usuario desde la base de datos por correo
 		usuario, err := models.ObtenerUsuarioPorCorreo(db, correo)
 		if err != nil {
-			// Si el usuario no existe, mostramos error
-			http.Error(w, "Usuario incorrectos", http.StatusUnauthorized)
+			// Si la contraseña no coincide, mostramos error
+			session, _ := store.Get(r, "session")
+			session.AddFlash("Usuario incorrecto", "error")
+			session.Save(r, w)
+			http.Redirect(w, r, "/login", http.StatusSeeOther)
+			tmpl, _ := template.ParseFiles("views/auth/login.html")
+			tmpl.Execute(w, LoginPageData{Error: "Usuario incorrecto"})
 			return
 		}
 
@@ -56,7 +73,12 @@ func ProcesarLogin(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		err = bcrypt.CompareHashAndPassword([]byte(usuario.ClaveSegura), []byte(claveSegura))
 		if err != nil {
 			// Si la contraseña no coincide, mostramos error
-			http.Error(w, "Contraseña incorrecta", http.StatusUnauthorized)
+			session, _ := store.Get(r, "session")
+			session.AddFlash("Contraseña incorrecta", "error")
+			session.Save(r, w)
+			http.Redirect(w, r, "/login", http.StatusSeeOther)
+			tmpl, _ := template.ParseFiles("views/auth/login.html")
+			tmpl.Execute(w, LoginPageData{Error: "Contraseña incorrecta"})
 			return
 		}
 
@@ -75,8 +97,8 @@ func ProcesarLogin(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 		// Opcionalmente, podemos establecer opciones de expiración de la cookie
 		session.Options = &sessions.Options{
-			Path:   "/",
-			MaxAge: 21600, // La sesión expirará en 6 horas
+			Path:     "/",
+			MaxAge:   21600,                // La sesión expirará en 6 horas
 			SameSite: http.SameSiteLaxMode, // Evitar CSRF
 		}
 
