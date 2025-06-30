@@ -80,13 +80,27 @@ func ObtenerUsuario(db *sql.DB, id int) (Usuario, error) {
 }
 
 // ModificarUsuario actualiza la información de un usuario en la base de datos
-func ModificarUsuario(db *sql.DB, usuario Usuario) error {
-	query := `UPDATE usuarios SET correo = ?, nombres = ?, clave_segura = ?, rol = ? WHERE id = ?`
-	_, err := db.Exec(query, usuario.Correo, usuario.Nombre, usuario.ClaveSegura, usuario.Rol, usuario.ID)
+func ModificarUsuario(db *sql.DB, usuario Usuario, actualizarClave bool) error {
+	var query string
+	var args []interface{}
+
+	if actualizarClave {
+		// Si se quiere actualizar la contraseña, incluirla en la query
+		query = `UPDATE usuarios SET correo = ?, nombres = ?, clave_segura = ?, rol = ? WHERE id = ?`
+		args = []interface{}{usuario.Correo, usuario.Nombre, usuario.ClaveSegura, usuario.Rol, usuario.ID}
+	} else {
+		// Si no se quiere actualizar la contraseña, excluirla de la query
+		query = `UPDATE usuarios SET correo = ?, nombres = ?, rol = ? WHERE id = ?`
+		args = []interface{}{usuario.Correo, usuario.Nombre, usuario.Rol, usuario.ID}
+	}
+
+	// Ejecutar la query
+	_, err := db.Exec(query, args...)
 	if err != nil {
 		log.Println("Error al modificar usuario:", err)
 		return err
 	}
+
 	return nil
 }
 

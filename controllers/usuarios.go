@@ -213,6 +213,7 @@ func ModificarUsuario(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	}
 
 	// Si es una solicitud POST, actualizamos el usuario con los nuevos datos
+	// Versión simplificada usando una sola función del modelo
 	if r.Method == http.MethodPost {
 		// Obtener los datos del formulario
 		correo := r.FormValue("correo")
@@ -220,30 +221,40 @@ func ModificarUsuario(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		claveSegura := r.FormValue("clave_segura")
 		rol := r.FormValue("rol")
 
-		// Encriptamos la contraseña usando bcrypt
-		claveHash, err := bcrypt.GenerateFromPassword([]byte(claveSegura), bcrypt.DefaultCost)
-		if err != nil {
-			http.Error(w, "Error al encriptar la contraseña", http.StatusInternalServerError)
+		// Validaciones básicas
+		if correo == "" || nombre == "" || rol == "" {
+			http.Error(w, "Correo, nombre y rol son obligatorios", http.StatusBadRequest)
 			return
 		}
 
-		// Crear un nuevo objeto usuario con los datos actualizados
+		// Crear objeto usuario base
 		usuario := models.Usuario{
-			ID:          id,
-			Correo:      correo,
-			Nombre:      nombre,
-			ClaveSegura: string(claveHash),
-			Rol:         rol,
+			ID:     id,
+			Correo: correo,
+			Nombre: nombre,
+			Rol:    rol,
 		}
 
-		// Llamar al modelo para actualizar el usuario en la base de datos
-		err = models.ModificarUsuario(db, usuario)
+		actualizarClave := false
+
+		// Si hay nueva contraseña, encriptarla
+		if claveSegura != "" {
+			claveHash, err := bcrypt.GenerateFromPassword([]byte(claveSegura), bcrypt.DefaultCost)
+			if err != nil {
+				http.Error(w, "Error al encriptar la contraseña", http.StatusInternalServerError)
+				return
+			}
+			usuario.ClaveSegura = string(claveHash)
+			actualizarClave = true
+		}
+
+		err = models.ModificarUsuario(db, usuario, actualizarClave)
 		if err != nil {
 			http.Error(w, "Error al modificar el usuario", http.StatusInternalServerError)
 			return
 		}
 
-		// Redirigir a la página de detalles del usuario después de la modificación
+		// Redirigir después de la modificación exitosa
 		http.Redirect(w, r, fmt.Sprintf("/admin/usuario?id=%d", id), http.StatusSeeOther)
 		return
 	}
