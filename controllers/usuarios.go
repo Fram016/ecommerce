@@ -220,12 +220,19 @@ func ModificarUsuario(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		claveSegura := r.FormValue("clave_segura")
 		rol := r.FormValue("rol")
 
+		// Encriptamos la contraseña usando bcrypt
+		claveHash, err := bcrypt.GenerateFromPassword([]byte(claveSegura), bcrypt.DefaultCost)
+		if err != nil {
+			http.Error(w, "Error al encriptar la contraseña", http.StatusInternalServerError)
+			return
+		}
+
 		// Crear un nuevo objeto usuario con los datos actualizados
 		usuario := models.Usuario{
 			ID:          id,
 			Correo:      correo,
 			Nombre:      nombre,
-			ClaveSegura: claveSegura,
+			ClaveSegura: string(claveHash),
 			Rol:         rol,
 		}
 
