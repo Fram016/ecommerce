@@ -10,7 +10,7 @@
                     <h4 class="card-title mb-0">Editar Categoría</h4>
                 </div>
                 <div class="card-body">
-                    <form action="/admin/categoria/editar" method="POST">
+                    <form action="/admin/categoria/editar?id={{.Categoria.ID}}" method="POST">
                         <!-- Campo oculto para ID -->
                         <input type="hidden" name="id" value="{{.Categoria.ID}}">
                         

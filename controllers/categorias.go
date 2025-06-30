@@ -154,8 +154,8 @@ func ModificarCategoria(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 			http.Error(w, "Error al renderizar la vista de categorías", http.StatusInternalServerError)
 			return
 		}
-
-		// Si es una solicitud POST, actualizamos la categoría con los nuevos datos
+	}
+	// Si es una solicitud POST, actualizamos la categoría con los nuevos datos
 		if r.Method == http.MethodPost {
 			// Obtener los datos del formulario
 			nombre := r.FormValue("nombre")
@@ -176,10 +176,9 @@ func ModificarCategoria(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 			}
 
 			// Redirigir a la página de detalles de la categoría después de la modificación
-			http.Redirect(w, r, fmt.Sprintf("/categoria?id=%d", id), http.StatusSeeOther)
+			http.Redirect(w, r, fmt.Sprintf("/admin/categoria?id=%d", id), http.StatusSeeOther)
 			return
 		}
-	}
 }
 
 // EliminarCategoria maneja la eliminación de una categoría por su ID
