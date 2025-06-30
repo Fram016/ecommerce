@@ -213,7 +213,6 @@ func ModificarUsuario(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	}
 
 	// Si es una solicitud POST, actualizamos el usuario con los nuevos datos
-	// Versión simplificada usando una sola función del modelo
 	if r.Method == http.MethodPost {
 		// Obtener los datos del formulario
 		correo := r.FormValue("correo")
