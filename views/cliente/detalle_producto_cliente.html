@@ -1,41 +1,40 @@
 {{define "detalle_producto_cliente"}}
-{{template "header_cliente"}}
+{{template "header_cliente" .}}
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
             <div class="card shadow-lg">
                 <div class="card-body">
                     <h3 class="card-title text-center mb-4">Detalles del Producto</h3>
-
                     <!-- Imagen del producto (si la tienes) -->
                     <div class="text-center mb-4">
-                        <img src="{{.ImagenPrincipal}}" alt="Imagen del producto" class="img-fluid" style="max-width: 300px;">
+                        <img src="{{.Producto.ImagenPrincipal}}" alt="Imagen del producto" class="img-fluid" style="max-width: 300px;">
                     </div>
 
                     <!-- Detalles del producto -->
                     <div class="mb-3">
                         <h5 class="mb-2"><strong>Nombre del Producto:</strong></h5>
-                        <p>{{.Nombre}}</p>
+                        <p>{{.Producto.Nombre}}</p>
                     </div>
 
                     <div class="mb-3">
                         <h5 class="mb-2"><strong>Descripción:</strong></h5>
-                        <p>{{.Descripcion}}</p>
+                        <p>{{.Producto.Descripcion}}</p>
                     </div>
 
                     <div class="mb-3">
                         <h5 class="mb-2"><strong>Precio:</strong></h5>
-                        <p class="text-success fs-4">${{.Precio}}</p>
+                        <p class="text-success fs-4">${{.Producto.Precio}}</p>
                     </div>
 
                     <div class="mb-3">
                         <h5 class="mb-2"><strong>Stock disponible:</strong></h5>
-                        <p>{{.Stock}} unidades</p>
+                        <p>{{.Producto.Stock}} unidades</p>
                     </div>
 
                     <div class="mb-3">
                         <h5 class="mb-2"><strong>Categoría:</strong></h5>
-                        <p>{{.CategoriaID}}</p>
+                        <p>{{.Producto.CategoriaID}}</p>
                     </div>
 
                     <!-- Botón de agregar al carrito -->

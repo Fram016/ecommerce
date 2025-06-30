@@ -1,5 +1,5 @@
 {{define "productos_admin"}}
-{{template "header_admin"}}
+{{template "header_admin" .}}
 <div class="container mt-4">
     <div class="row">
         <div class="col-12">
@@ -7,7 +7,7 @@
         </div>
     </div>
     <div class="row">
-        {{range .}}
+        {{range .Productos}}
         <div class="col-md-4 mb-4">
             <!-- Tarjeta de Producto -->
             <div class="card">
@@ -15,6 +15,10 @@
                     <h5 class="card-title">{{.Nombre}}</h5>
                 </div>
                 <div class="card-body">
+                    <!-- Imagen del producto (si la tienes) -->
+                    <div class="text-center mb-4">
+                        <img src="/{{.ImagenPrincipal}}" class="card-img-top" alt="Producto">
+                    </div>
                     <p><strong>Descripción:</strong> {{.Descripcion}}</p>
                     <p><strong>Precio:</strong> ${{.Precio}}</p>
                     <p><strong>Stock:</strong> {{.Stock}}</p>

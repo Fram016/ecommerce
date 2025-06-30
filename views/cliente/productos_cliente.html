@@ -1,10 +1,10 @@
 {{define "productos_cliente"}}
-{{template "header_cliente"}}
+{{template "header_cliente" .}}
 
 <div class="container mt-5">
     <h2 class="text-center mb-4">Lista de Productos</h2>
     <div class="row">
-        {{range .}}
+        {{range .Productos}}
         <div class="col-md-4 mb-4">
             <div class="card shadow-sm">
                 <!-- Imagen del producto (opcional) -->

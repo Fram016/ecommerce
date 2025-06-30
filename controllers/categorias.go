@@ -20,7 +20,7 @@ func ListarCategorias(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	}
 
 	// Cargamos la plantilla (vista) donde mostraremos las categorías
-	tmpl, err := template.ParseFiles("views/categorias.html")
+	tmpl, err := template.ParseFiles("views/admin/categorias.html")
 	if err != nil {
 		http.Error(w, "Error al cargar la vista de categorías", http.StatusInternalServerError)
 		return

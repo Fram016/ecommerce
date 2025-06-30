@@ -14,6 +14,15 @@ type LoginPageData struct {
 	Error string
 }
 
+type ViewData struct {
+	Productos  []models.Producto
+	UsuarioID  int
+	UsuarioRol string
+	Correo     string
+	Nombre     string
+	Producto   models.Producto
+}
+
 // Crear el store de sesiones con una clave secreta
 var store = sessions.NewCookieStore([]byte("VoladorDeClaveSecreta*"))
 
@@ -162,14 +171,59 @@ func MostrarIndex(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		}
 		productos[i].ImagenPrincipal = imagen.RutaImagen
 	}
-
-	// Cargar la plantilla de la página de inicio
-	tmpl, err := template.ParseFiles("views/index.html")
-	if err != nil {
-		http.Error(w, "Error al cargar la vista de inicio", http.StatusInternalServerError)
-		return
+	// Obtener la sesión del usuario
+	session, _ := store.Get(r, "session")
+	rol, ok := session.Values["rol"].(string)
+	if !ok {
+		rol = ""
 	}
 
-	// Pasar los productos a la vista
-	tmpl.Execute(w, productos)
+	viewData := ViewData{
+		Productos:  productos,
+		UsuarioRol: rol,
+	}
+
+	if id, ok := session.Values["usuario_id"].(int); ok {
+		viewData.UsuarioID = id
+	}
+	if correo, ok := session.Values["correo"].(string); ok {
+		viewData.Correo = correo
+	}
+	if nombre, ok := session.Values["nombre"].(string); ok {
+		viewData.Nombre = nombre
+	}
+
+	var tmpl *template.Template
+
+	// Si el rol es admin, mostramos la vista para administradores
+	if rol == "admin" {
+		tmpl = template.Must(template.ParseFiles(
+			"views/partials/header_admin.html",
+			"views/admin/index_admin.html",
+			"views/partials/footer.html",
+		))
+		// Pasamos los productos a la vista y renderizamos todas las plantillas (header, cuerpo, footer)
+		err = tmpl.ExecuteTemplate(w, "index_admin", viewData)
+		if err != nil {
+			// Si ocurre un error al renderizar la plantilla, mostramos una respuesta 500
+			http.Error(w, "Error al renderizar la vista de admin", http.StatusInternalServerError)
+			return
+		}
+
+	} else {
+		// Si el rol es cliente o cualquier otro, mostramos la vista para clientes
+		tmpl = template.Must(template.ParseFiles(
+			"views/partials/header_cliente.html", // Encabezado para cliente
+			"views/index.html",                   // Cuerpo con los productos para clientes
+			"views/partials/footer.html",         // Pie de página común
+		))
+		// Pasamos los productos a la vista y renderizamos todas las plantillas (header, cuerpo, footer)
+		err = tmpl.ExecuteTemplate(w, "index", viewData)
+		if err != nil {
+			// Si ocurre un error al renderizar la plantilla, mostramos una respuesta 500
+			http.Error(w, "Error al renderizar la vista de productos", http.StatusInternalServerError)
+			return
+		}
+	}
+
 }

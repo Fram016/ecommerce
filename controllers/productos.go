@@ -39,6 +39,20 @@ func MostrarProductos(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	if !ok {
 		rol = ""
 	}
+	viewData := ViewData{
+		Productos:  productos,
+		UsuarioRol: rol,
+	}
+
+	if id, ok := session.Values["usuario_id"].(int); ok {
+		viewData.UsuarioID = id
+	}
+	if correo, ok := session.Values["correo"].(string); ok {
+		viewData.Correo = correo
+	}
+	if nombre, ok := session.Values["nombre"].(string); ok {
+		viewData.Nombre = nombre
+	}
 
 	// Si el usuario es admin, redirigimos a la página de administración
 	if rol == "admin" && !strings.HasPrefix(r.URL.Path, "/admin") {
@@ -58,7 +72,7 @@ func MostrarProductos(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 			"views/partials/footer.html",
 		))
 		// Pasamos los productos a la vista y renderizamos todas las plantillas (header, cuerpo, footer)
-		err = tmpl.ExecuteTemplate(w, "productos_admin", productos)
+		err = tmpl.ExecuteTemplate(w, "productos_admin", viewData)
 		if err != nil {
 			// Si ocurre un error al renderizar la plantilla, mostramos una respuesta 500
 			http.Error(w, "Error al renderizar la vista de productos", http.StatusInternalServerError)
@@ -73,7 +87,7 @@ func MostrarProductos(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 			"views/partials/footer.html",           // Pie de página común
 		))
 		// Pasamos los productos a la vista y renderizamos todas las plantillas (header, cuerpo, footer)
-		err = tmpl.ExecuteTemplate(w, "productos_cliente", productos)
+		err = tmpl.ExecuteTemplate(w, "productos_cliente", viewData)
 		if err != nil {
 			// Si ocurre un error al renderizar la plantilla, mostramos una respuesta 500
 			http.Error(w, "Error al renderizar la vista de productos", http.StatusInternalServerError)
@@ -168,6 +182,7 @@ func ObtenerProducto(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	if !ok {
 		rol = ""
 	}
+
 	// Si el usuario es admin, redirigimos a la página de administración
 	if rol == "admin" && !strings.HasPrefix(r.URL.Path, "/admin") {
 		// Redirigimos solo si el usuario está intentando acceder a la ruta /productos o cualquier otra que no sea /admin
@@ -197,6 +212,21 @@ func ObtenerProducto(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 	producto.Imagenes = imagenes
 	producto.ImagenPrincipal = imagenPrincipal.RutaImagen
+
+	viewData := ViewData{
+		Producto:   producto,
+		UsuarioRol: rol,
+	}
+
+	if id, ok := session.Values["usuario_id"].(int); ok {
+		viewData.UsuarioID = id
+	}
+	if correo, ok := session.Values["correo"].(string); ok {
+		viewData.Correo = correo
+	}
+	if nombre, ok := session.Values["nombre"].(string); ok {
+		viewData.Nombre = nombre
+	}
 	// Determinamos cuál plantilla renderizar dependiendo del rol
 	var tmpl *template.Template
 
@@ -208,7 +238,7 @@ func ObtenerProducto(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 			"views/partials/footer.html",
 		))
 		// Pasamos los productos a la vista y renderizamos todas las plantillas (header, cuerpo, footer)
-		err = tmpl.ExecuteTemplate(w, "detalle_producto_admin", producto)
+		err = tmpl.ExecuteTemplate(w, "detalle_producto_admin", viewData)
 		if err != nil {
 			// Si ocurre un error al renderizar la plantilla, mostramos una respuesta 500
 			http.Error(w, "Error al renderizar la vista de productos", http.StatusInternalServerError)
@@ -223,7 +253,7 @@ func ObtenerProducto(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 			"views/partials/footer.html",                  // Pie de página común
 		))
 		// Pasamos los productos a la vista y renderizamos todas las plantillas (header, cuerpo, footer)
-		err = tmpl.ExecuteTemplate(w, "detalle_producto_cliente", producto)
+		err = tmpl.ExecuteTemplate(w, "detalle_producto_cliente", viewData)
 		if err != nil {
 			// Si ocurre un error al renderizar la plantilla, mostramos una respuesta 500
 			http.Error(w, "Error al renderizar la vista de productos", http.StatusInternalServerError)

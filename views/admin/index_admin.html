@@ -1,0 +1,66 @@
+{{define "index_admin"}}
+{{template "header_admin" .}}
+
+<main class="container mt-5 flex-grow-1">
+    <h2 class="mb-4">Panel de Administración</h2>
+
+    <!-- Sección de accesos rápidos -->
+    <div class="row mb-5">
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Clientes</h5>
+                    <p class="card-text">Gestión de usuarios registrados.</p>
+                    <a href="/admin/clientes" class="btn btn-outline-primary w-100">Ver Clientes</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Categorías</h5>
+                    <p class="card-text">Organizá tus productos por categoría.</p>
+                    <a href="/admin/categorias" class="btn btn-outline-success w-100">Ver Categorías</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Pedidos</h5>
+                    <p class="card-text">Revisá y administrá los pedidos realizados.</p>
+                    <a href="/admin/pedidos" class="btn btn-outline-danger w-100">Ver Pedidos</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de productos recientes -->
+    <h3 class="mb-3">Productos Recientes</h3>
+    <div class="row">
+        {{range .Productos}}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <img src="/{{.ImagenPrincipal}}" class="card-img-top" alt="Imagen del producto" style="height: 200px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title">{{.Nombre}}</h5>
+                    <p class="card-text">{{.Descripcion}}</p>
+                    <p class="text-success fw-bold">${{.Precio}}</p>
+                    <a href="/admin/producto?id={{.ID}}" class="btn btn-primary btn-sm">Ver Detalles</a>
+                    <a href="/admin/producto/editar?id={{.ID}}" class="btn btn-warning btn-sm">Editar</a>
+                    <a href="/admin/producto/eliminar?id={{.ID}}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar este producto?')">Eliminar</a>
+                </div>
+            </div>
+        </div>
+        {{else}}
+        <div class="col-12">
+            <p class="text-center">No hay productos disponibles.</p>
+        </div>
+        {{end}}
+    </div>
+</main>
+
+{{template "footer"}}
+{{end}}
